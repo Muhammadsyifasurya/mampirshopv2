@@ -2,7 +2,7 @@
 import Filter from "@/components/Filter";
 import ProductList from "@/components/ProductList";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getDataResponse } from "../service/api";
 import { useCart } from "@/context/CartContext";
@@ -21,14 +21,15 @@ const ListPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
-  const nameQuery = searchParams.get("name") || "";
-  const categoryId = searchParams.get("categoryId");
-  const minPrice = Number(searchParams.get("minPrice")) || 0;
-  const maxPrice = Number(searchParams.get("maxPrice")) || 10000;
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const { addToCart } = useCart();
 
   useEffect(() => {
+    if (typeof window === "undefined") return; // Hindari penggunaan di SSR
+    const nameQuery = searchParams.get("name") || "";
+    const categoryId = searchParams.get("categoryId");
+    const minPrice = Number(searchParams.get("minPrice")) || 0;
+    const maxPrice = Number(searchParams.get("maxPrice")) || 10000;
     const fetchProducts = async () => {
       try {
         setLoading(true);
@@ -48,7 +49,7 @@ const ListPage: React.FC = () => {
     };
 
     fetchProducts();
-  }, [nameQuery, categoryId, minPrice, maxPrice]);
+  }, [searchParams]);
 
   const handleShowPopup = () => {
     setShowPopup(true);
@@ -129,4 +130,10 @@ const ListPage: React.FC = () => {
   );
 };
 
-export default ListPage;
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ListPage />
+    </Suspense>
+  );
+}

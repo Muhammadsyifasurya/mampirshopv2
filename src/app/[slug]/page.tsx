@@ -6,6 +6,8 @@ import Popup from "@/components/Popup";
 import ProductImages from "@/components/ProductImages";
 import { useCart } from "@/context/CartContext";
 import React, { useEffect, useState } from "react";
+import { getDataResponse } from "../service/api";
+import { useParams } from "next/navigation";
 
 interface Product {
   id: number;
@@ -15,14 +17,9 @@ interface Product {
   images: string[];
 }
 
-interface Props {
-  params: {
-    slug: string;
-  };
-}
-
-const SinglePage: React.FC<Props> = ({ params }) => {
-  const { slug } = params;
+const SinglePage: React.FC = () => {
+  const params = useParams();
+  const slug = params.slug;
   const { addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -47,19 +44,12 @@ const SinglePage: React.FC<Props> = ({ params }) => {
     }
   };
 
+  // Menggunakan getDataResponse untuk mengambil data produk
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/products/${slug}`
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch product data");
-        }
-
-        const data = await response.json();
+        const data = await getDataResponse(`/products/${slug}`);
         setProduct(data);
       } catch (error) {
         setError("Error fetching product: " + error);
@@ -68,9 +58,10 @@ const SinglePage: React.FC<Props> = ({ params }) => {
       }
     };
 
-    fetchProducts();
+    if (slug) {
+      fetchProduct();
+    }
   }, [slug]);
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
