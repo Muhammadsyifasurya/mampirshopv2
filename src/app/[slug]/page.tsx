@@ -110,7 +110,10 @@ const SinglePage: React.FC<Props> = ({ params }) => {
         <div className="h-[2px] bg-gray-100"></div>
         <div className="flex items-center gap-4">
           <h3 className="text-xl text-gray-500 line-through">
-            ${product?.price}
+            $
+            {product?.price
+              ? (product.price * 1.1).toFixed(2)
+              : "Price not available"}
           </h3>
           <h3 className="font-medium text-2xl">${product?.price}</h3>
         </div>
