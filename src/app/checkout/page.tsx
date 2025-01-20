@@ -2,26 +2,29 @@
 import { useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useUser } from "@/context/AuthContext";
+import Image from "next/image";
 
-interface Product {
+interface CartItem {
   id: number;
   title: string;
-  images: string[];
   price: number;
-  description: string;
   quantity: number;
+  image: string;
 }
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
+interface InvoiceDetails {
+  items: CartItem[];
+  totalAmount: number; // Total jumlah pesanan
+  shippingAddress: string; // Alamat pengiriman
+  paymentMethod: string; // Metode pembayaran
 }
 
 const CheckoutPage = () => {
   const { cartItems, calculateTotal } = useCart();
-  const [invoiceDetails, setInvoiceDetails] = useState<any | null>(null);
-  const { isLoggedIn, user, logout } = useUser();
+  const [invoiceDetails, setInvoiceDetails] = useState<InvoiceDetails | null>(
+    null
+  );
+  const { user } = useUser();
 
   useEffect(() => {
     if (cartItems.length > 0) {
@@ -43,7 +46,13 @@ const CheckoutPage = () => {
     <div className="bg-white rounded-lg shadow-lg px-8 py-10 max-w-xl mx-auto mt-28">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">
-          <img className="h-8 w-8 mr-2" src="/MampirShop.webp" alt="Logo" />
+          <Image
+            className="h-8 w-8 mr-2"
+            src="/MampirShop.webp"
+            alt="Logo"
+            width={32} // Tentukan lebar gambar sesuai kebutuhan
+            height={32} // Tentukan tinggi gambar sesuai kebutuhan
+          />
           <div className="text-gray-700 font-bold text-2xl">MampirShop</div>
         </div>
         <div className="text-gray-700">
@@ -74,7 +83,7 @@ const CheckoutPage = () => {
           </tr>
         </thead>
         <tbody>
-          {invoiceDetails.items.map((product: Product) => (
+          {invoiceDetails.items.map((product: CartItem) => (
             <tr key={product.id}>
               <td className="py-4 text-gray-700">{product.title}</td>
               <td className="py-4 text-gray-700">{product.quantity}</td>

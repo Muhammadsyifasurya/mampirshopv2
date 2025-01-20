@@ -34,7 +34,6 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const [userId, setUserId] = useState<string | null>(null); // ID pengguna dari konteks UserContext
   const { setCartItems } = useCart();
 
   const login = (user: User) => {

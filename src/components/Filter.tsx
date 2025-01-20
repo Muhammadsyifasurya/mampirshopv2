@@ -8,15 +8,6 @@ interface Category {
   name: string;
 }
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  images: string[];
-  categoryId: number;
-}
-
 const Filter = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -32,7 +23,7 @@ const Filter = () => {
       );
       setCategories(response.data);
     } catch (err) {
-      setError("Failed to fetch categories");
+      setError("Failed to fetch categories" + error);
       console.log(err);
     }
   };

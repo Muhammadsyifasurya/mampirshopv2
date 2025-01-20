@@ -33,7 +33,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [itemCount, setItemCount] = useState(0);
 
   const getUserId = (): string | null => {
     const user = Cookies.get("user"); // Get user data from cookies
@@ -76,10 +75,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
   const removeFromCart = (id: number) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
-  };
-
-  const addItem = () => {
-    setItemCount((prevCount) => prevCount + 1);
   };
 
   const increaseQuantity = (id: number) => {

@@ -61,8 +61,8 @@ const SinglePage: React.FC<Props> = ({ params }) => {
 
         const data = await response.json();
         setProduct(data);
-      } catch (error: any) {
-        setError("Error fetching product: " + error.message);
+      } catch (error) {
+        setError("Error fetching product: " + error);
       } finally {
         setLoading(false);
       }

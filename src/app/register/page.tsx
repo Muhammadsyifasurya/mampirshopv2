@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation"; // Untuk navigasi setelah registrasi berhasil
+import Link from "next/link";
 
 const Register = () => {
   const router = useRouter();
@@ -49,8 +50,8 @@ const Register = () => {
 
       // Jika registrasi berhasil, arahkan ke halaman login
       router.push("/login");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      setError("error" + error);
     } finally {
       setLoading(false);
     }
@@ -118,9 +119,9 @@ const Register = () => {
         <div className="mt-4 text-center">
           <p>
             Sudah punya akun?{" "}
-            <a href="/login" className="text-blue-500">
+            <Link href="/login" className="text-blue-500">
               Login di sini
-            </a>
+            </Link>
           </p>
         </div>
       </div>

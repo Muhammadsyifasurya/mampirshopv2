@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation"; // Untuk navigasi setelah login berhasil
 import { useUser } from "@/context/AuthContext";
+import Link from "next/link";
 
 const Login = () => {
   const router = useRouter();
@@ -49,8 +50,8 @@ const Login = () => {
       };
       login(userAuth);
       router.push("/");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      setError("error" + error);
     } finally {
       setLoading(false);
     }
@@ -104,9 +105,9 @@ const Login = () => {
         <div className="mt-4 text-center">
           <p>
             Belum punya akun?{" "}
-            <a href="/register" className="text-blue-500">
+            <Link href="/register" className="text-blue-500">
               Daftar di sini
-            </a>
+            </Link>
           </p>
         </div>
       </div>
