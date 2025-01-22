@@ -32,6 +32,7 @@ const ListPage: React.FC = () => {
     const maxPrice = Number(searchParams.get("maxPrice")) || 10000;
     const fetchProducts = async () => {
       try {
+        setProducts([]); // Clear konten saat loading dimulai
         setLoading(true);
         const endpoint = `/products/?title=${nameQuery}${
           categoryId ? `&categoryId=${categoryId}` : ""
@@ -72,6 +73,7 @@ const ListPage: React.FC = () => {
       <Popup
         message="Item Berhasil ditambahkan ke keranjang !"
         isVisible={showPopup}
+        type="success"
         onClose={() => setShowPopup(false)}
       />
       <div className="hidden bg-[#C0C1C3] px-4 sm:flex justify-between h-64">
@@ -95,6 +97,8 @@ const ListPage: React.FC = () => {
         </div>
       </div>
       <Filter />
+      <h1 className="mt-12 text-xl font-semibold">All For You!</h1>
+
       {loading && (
         <div className="flex justify-center items-center min-h-screen">
           <div className="flex items-center gap-2">
@@ -107,24 +111,56 @@ const ListPage: React.FC = () => {
           </p>
         </div>
       )}
-      {error && <p className="text-red-500 font-semibold">{error}</p>}
-      <h1 className="mt-12 text-xl font-semibold">All For You!</h1>
+      {error && (
+        <>
+          <Popup
+            message="Gagal memuat produk. Coba lagi nanti. !"
+            type="error"
+            isVisible={true}
+            onClose={() => setShowPopup(false)}
+          />
+          <div className="mt-4 flex items-center gap-4 bg-gradient-to-r from-red-400 to-red-600 text-white p-4 rounded-lg shadow-lg">
+            <div className="flex-shrink-0 bg-white text-red-500 rounded-full p-2 shadow-md">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+            <div>
+              <p className="text-lg font-bold">Terjadi Kesalahan</p>
+              <p className="text-sm">
+                {error} <br />
+                Silakan coba lagi atau hubungi tim dukungan.
+              </p>
+            </div>
+          </div>
+        </>
+      )}
+
       <div className="flex flex-wrap gap-10 mt-12 justify-center">
-        {products.length > 0 ? (
-          products.map((product: Product) => (
-            <ProductList
-              id={product.id}
-              key={product.id}
-              title={product.title}
-              images={product.images}
-              price={product.price}
-              description={product.description}
-              onAddToCart={() => handleAddToCart(product)}
-            />
-          ))
-        ) : (
-          <p>No products found.</p>
-        )}
+        {products.length > 0
+          ? products.map((product: Product) => (
+              <ProductList
+                id={product.id}
+                key={product.id}
+                title={product.title}
+                images={product.images}
+                price={product.price}
+                description={product.description}
+                onAddToCart={() => handleAddToCart(product)}
+              />
+            ))
+          : !loading && <p>No products found.</p>}
       </div>
     </div>
   );
