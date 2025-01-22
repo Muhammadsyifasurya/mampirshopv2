@@ -30,8 +30,13 @@ const Filter = () => {
 
   const handleCategoryChange = (categoryId: number | null) => {
     setSelectedCategory(categoryId);
-    // Update URL query parameter berdasarkan kategori yang dipilih
-    router.push(`/list?page=1&categoryId=${categoryId || ""}`);
+    // Jika kategori dipilih, update URL dengan kategori
+    if (categoryId !== null) {
+      router.push(`/list?page=1&categoryId=${categoryId}`);
+    } else {
+      // Jika tidak ada kategori, tetap update dengan minPrice dan maxPrice saja
+      router.push(`/list?page=1&minPrice=${minPrice}&maxPrice=${maxPrice}`);
+    }
   };
 
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,13 +54,18 @@ const Filter = () => {
   };
 
   const handleBlur = () => {
-    // Update URL query parameter saat minPrice dan maxPrice kehilangan fokus
-    if (
-      (maxPrice == undefined && minPrice == undefined) ||
-      (maxPrice == 0 && minPrice == undefined) ||
-      (maxPrice == undefined && minPrice == 0)
-    ) {
+    // Jika salah satu nilai undefined atau kosong, jangan update URL
+    if (!minPrice || !maxPrice) {
+      return; // Tidak melakukan apa-apa
+    }
+
+    // Ambil categoryId saat ini, jika tidak ada kategori, URL hanya mengandung minPrice dan maxPrice
+    if (selectedCategory !== null) {
+      router.push(
+        `/list?page=1&categoryId=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+      );
     } else {
+      // Jika tidak ada kategori yang dipilih, update hanya dengan minPrice dan maxPrice
       router.push(`/list?page=1&minPrice=${minPrice}&maxPrice=${maxPrice}`);
     }
   };
