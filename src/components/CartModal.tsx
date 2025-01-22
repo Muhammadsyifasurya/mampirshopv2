@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCart } from "../context/CartContext";
 import Link from "next/link";
 
-const CartModal = () => {
+const CartModal = ({ closeModal }: { closeModal: () => void }) => {
   const {
     cartItems,
     removeFromCart,
@@ -14,7 +14,13 @@ const CartModal = () => {
   } = useCart();
 
   return (
-    <div className="w-max absolute p-4 rounded-md shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white top-12 right-0 flex flex-col gap-6 z-20 max-h-[500px]">
+    <div className="w-max absolute py-4 px-7 rounded-md shadow-[0_3px_10px_rgb(0,0,0,0.2)] bg-white top-12 right-0 flex flex-col gap-6 z-20 max-h-[500px]">
+      <button
+        onClick={closeModal}
+        className="absolute top-[1px] right-2 text-2xl text-gray-600 hover:text-gray-800 transition duration-200"
+      >
+        ×
+      </button>
       {!cartItems || cartItems.length === 0 ? (
         <div className="">Cart is Empty</div>
       ) : (

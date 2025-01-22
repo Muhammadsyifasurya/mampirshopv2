@@ -48,21 +48,43 @@ const NavIcons = () => {
         />
       </button>
 
-      {isProfileOpen && isLoggedIn ? (
-        // Menampilkan dropdown jika sudah login
-        <div className="absolute p-4 rounded-md top-12 left-0 text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-30">
-          <div>Hai, {user?.name}!</div> {/* Nama pengguna */}
-          <div className="mt-2 cursor-pointer" onClick={handleLogout}>
-            Logout
-          </div>
-        </div>
-      ) : isProfileOpen && !isLoggedIn ? (
-        // Jika belum login, arahkan ke login
-        <div className="absolute p-4 rounded-md top-12 left-0 text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20">
-          <Link href="/login">Login</Link>
-          <Link href="/register" className="mt-2 block">
-            Register
-          </Link>
+      {isProfileOpen ? (
+        <div className="absolute pt-6 pb-4 px-7 rounded-lg bg-white top-12 left-0 text-sm shadow-lg z-30 w-32 max-w-[300px]">
+          <button
+            onClick={() => setIsProfileOpen(false)}
+            className="absolute top-[1px] right-2 text-xl text-gray-600 hover:text-gray-800 transition duration-200"
+          >
+            ×
+          </button>
+          {isLoggedIn ? (
+            <>
+              <div className="font-semibold text-gray-800">
+                Hai, {user?.name}!
+              </div>{" "}
+              {/* Nama pengguna */}
+              <div
+                className="mt-3 cursor-pointer text-gray-600 hover:text-gray-900 hover:underline transition duration-200"
+                onClick={handleLogout}
+              >
+                Logout
+              </div>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-gray-600 hover:text-gray-900 hover:underline transition duration-200"
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="mt-2 block text-gray-600 hover:text-gray-900 hover:underline transition duration-200"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       ) : null}
 
@@ -100,7 +122,7 @@ const NavIcons = () => {
         </div>
       </div>
 
-      {isCartOpen && <CartModal />}
+      {isCartOpen && <CartModal closeModal={() => setIsCartOpen(false)} />}
     </div>
   );
 };
