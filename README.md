@@ -26,7 +26,7 @@ The application leverages modern web technologies for enhanced performance, usin
 
 [View the live version here](https://mampirshopv2.vercel.app/)
 
-## New Features Implemented
+## 🐣 New Features Implemented
 
 - **Next.js Integration**: Integrated Next.js for optimized routing and efficient server-side rendering (SSR).
 - **User Authentication**: Implemented login and registration functionalities using a provided API, allowing users to securely access their accounts.
@@ -60,11 +60,54 @@ To get this project running on your local machine, follow these steps:
    code .
    ```
 
-4. **Run project**
+4. **Start the development server:**
 
    ```bash
    npm run dev
    ```
+
+## ✈️ Tutorial: Deploy Next JS Application to Vercel
+
+Follow these steps to deploy your React application to Vercel:
+
+### 1. Prepare Your Application
+
+Ensure that your React application is ready and working properly locally before deploying it to Vercel. You can run the app on localhost using the `npm run dev` command to check that it's working correctly.
+
+### 2. Create an Account on Vercel
+
+If you don’t already have an account on Vercel, you need to sign up:
+
+- Visit [Vercel](https://vercel.com).
+- Sign up or log in using your GitHub, GitLab, or Bitbucket account.
+
+### 3. Link Vercel with Your Repository
+
+To deploy using GitHub (or GitLab/Bitbucket), you need to connect your Vercel account with your GitHub account:
+
+- After logging in to Vercel, click **New Project** in the dashboard.
+- Choose **Import Project** and link your GitHub account.
+- Select the repository that contains the React application you want to deploy.
+
+### 4. Configure Vercel
+
+Once you’ve selected the repository, Vercel will automatically configure your project. However, you can verify a few settings:
+
+- **Framework Preset**: Select **Next** (Vercel will detect this automatically if you’re using React).
+- **Build Command**: Ensure `npm run build` (or `yarn build`) is selected to build your application.
+- **Output Directory**: Ensure that the build directory is `build/`.
+
+### 5. Deploy the Application
+
+After configuring, click the **Deploy** button. Vercel will start building your application and deploy it to their server.
+
+### 6. Wait for the Deployment Process
+
+The build and deployment process will take a few minutes. Once finished, Vercel will provide a URL for you to access your deployed application.
+
+### 7. Access the Application
+
+Once the deployment is complete, you can access your application through the URL provided by Vercel, which is usually in the format `https://mampirshop.vercel.app`.
 
 ## 🧪 Testing Methodologies Used
 
