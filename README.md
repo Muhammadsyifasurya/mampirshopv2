@@ -1,4 +1,4 @@
-![My Website View](/public/milestone2.PNG)
+![My Website View](/milestone2.PNG)
 
 # Hello, I'm Muhammad Syifa Surya Saputra 👋
 
