@@ -90,6 +90,7 @@ const SinglePage: React.FC = () => {
       <Popup
         message="Item Berhasil ditambahkan ke keranjang !"
         isVisible={showPopup}
+        type="success"
         onClose={() => setShowPopup(false)}
       />
       <div className="w-full lg:w-1/2 lg:sticky top-20 h-max">

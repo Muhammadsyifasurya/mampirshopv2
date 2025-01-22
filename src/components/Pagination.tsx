@@ -73,6 +73,7 @@ const ProductsWithPagination = ({ products }: Props) => {
       <Popup
         message="Item Berhasil ditambahkan ke keranjang !"
         isVisible={showPopup}
+        type="success"
         onClose={() => setShowPopup(false)}
       />
       <div className="flex flex-wrap justify-between gap-10">
