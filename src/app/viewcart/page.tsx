@@ -25,14 +25,14 @@ const ViewCartPage = () => {
 
   return (
     <div className="mt-24 min-h-screen py-8">
-      <div className="max-w-6xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <div className="max-w-6xl mx-auto p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         {!cartItems || cartItems.length === 0 ? (
-          <div className="text-center text-2xl font-semibold text-gray-700">
+          <div className="text-center text-2xl font-semibold text-gray-700 dark:text-gray-300">
             Your cart is empty.
           </div>
         ) : (
           <>
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">
               Shopping Cart
             </h2>
             {/* Cart Items */}
@@ -40,7 +40,7 @@ const ViewCartPage = () => {
               {cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-4 bg-gray-50 p-4 rounded-lg shadow-sm"
+                  className="flex items-center gap-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow-sm"
                 >
                   <Image
                     src={item.image}
@@ -51,33 +51,37 @@ const ViewCartPage = () => {
                   />
                   <div className="flex flex-col w-full">
                     <div className="flex justify-between items-center">
-                      <h3 className="font-semibold text-gray-700">
+                      <h3 className="font-semibold text-gray-700 dark:text-gray-200">
                         {item.title}
                       </h3>
-                      <div className="text-xl text-gray-500">${item.price}</div>
+                      <div className="text-xl text-gray-500 dark:text-gray-400">
+                        ${item.price}
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-400">Available</div>
+                    <div className="text-sm text-gray-400 dark:text-gray-500">
+                      Available
+                    </div>
 
                     <div className="flex justify-between items-center mt-4">
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => decreaseQuantity(item.id)}
-                          className="px-3 py-1 bg-indigo-100 text-indigo-600 rounded-md hover:bg-indigo-200 transition"
+                          className="px-3 py-1 bg-indigo-100 dark:bg-indigo-700 text-indigo-600 dark:text-indigo-300 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition"
                         >
                           -
                         </button>
-                        <span className="text-gray-600">
+                        <span className="text-gray-600 dark:text-gray-300">
                           Qty. {item.quantity}
                         </span>
                         <button
                           onClick={() => increaseQuantity(item.id)}
-                          className="px-3 py-1 bg-indigo-100 text-indigo-600 rounded-md hover:bg-indigo-200 transition"
+                          className="px-3 py-1 bg-indigo-100 dark:bg-indigo-700 text-indigo-600 dark:text-indigo-300 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition"
                         >
                           +
                         </button>
                       </div>
                       <span
-                        className="text-red-500 cursor-pointer hover:underline"
+                        className="text-red-500 cursor-pointer hover:underline dark:text-red-400"
                         onClick={() => removeFromCart(item.id)}
                       >
                         Remove
@@ -94,18 +98,18 @@ const ViewCartPage = () => {
                 type="text"
                 value={inputDiscountCode}
                 onChange={(e) => setInputDiscountCode(e.target.value)}
-                className="p-3 border border-gray-300 rounded-md w-full"
+                className="p-3 border border-gray-300 dark:border-gray-600 rounded-md w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
                 placeholder="Enter Discount Code"
               />
               <button
                 onClick={handleDiscountApply}
-                className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+                className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition dark:bg-indigo-500 dark:hover:bg-indigo-600"
               >
                 Apply
               </button>
             </div>
             {discountCode && (
-              <div className="mt-2 text-green-500 font-semibold">
+              <div className="mt-2 text-green-500 font-semibold dark:text-green-300">
                 Discount applied: {discountAmount * 100}% off!
               </div>
             )}
@@ -113,22 +117,26 @@ const ViewCartPage = () => {
             {/* Bottom Section */}
             <div className="mt-6">
               <div className="flex justify-between font-semibold text-lg">
-                <span className="text-gray-800">Subtotal</span>
-                <span className="text-gray-800">${calculateTotal()}</span>
+                <span className="text-gray-800 dark:text-gray-100">
+                  Subtotal
+                </span>
+                <span className="text-gray-800 dark:text-gray-100">
+                  ${calculateTotal()}
+                </span>
               </div>
-              <p className="text-sm text-gray-500 mt-2 mb-6">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 mb-6">
                 Shipping and taxes calculated at checkout.
               </p>
 
               {/* Actions */}
               <div className="flex justify-between">
                 <Link href="/checkout">
-                  <button className="px-6 py-3 bg-black text-white rounded-md shadow-md hover:bg-gray-900 transition">
+                  <button className="px-6 py-3 text-white rounded-3xl shadow-md hover:bg-gray-800 transition dark:bg-gray-900 dark:hover:bg-gray-700">
                     Checkout
                   </button>
                 </Link>
                 <Link href="/">
-                  <button className="px-6 py-3 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition">
+                  <button className="px-6 py-3 bg-gray-400 text-gray-800 rounded-3xl hover:bg-gray-300 transition dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
                     Continue Shopping
                   </button>
                 </Link>
