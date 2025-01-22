@@ -114,9 +114,7 @@ const ViewCartPage = () => {
             <div className="mt-6">
               <div className="flex justify-between font-semibold text-lg">
                 <span className="text-gray-800">Subtotal</span>
-                <span className="text-gray-800">
-                  ${calculateTotal() - calculateTotal() * discountAmount}
-                </span>
+                <span className="text-gray-800">${calculateTotal()}</span>
               </div>
               <p className="text-sm text-gray-500 mt-2 mb-6">
                 Shipping and taxes calculated at checkout.

@@ -1,36 +1,14 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useUser } from "@/context/AuthContext"; // Pastikan import dari UserContext
 import { useRouter } from "next/navigation";
-import { getDataResponse } from "../service/api";
 import Image from "next/image";
-
-interface Order {
-  id: number;
-  status: string;
-  createdAt: string;
-}
+import { useCart } from "@/context/CartContext";
 
 const UserProfile: React.FC = () => {
   const { isLoggedIn, user, logout } = useUser();
-  const [orderHistory, setOrderHistory] = useState<Order[]>([]);
+  const { orderHistory } = useCart();
   const router = useRouter();
-
-  // Mengambil order history atau data lainnya (misalnya produk yang disukai) dari API
-  useEffect(() => {
-    if (isLoggedIn && user) {
-      const fetchOrderHistory = async () => {
-        try {
-          const data = await getDataResponse(`/orders?userId=${user.id}`);
-          setOrderHistory(data.orders);
-        } catch (error) {
-          console.error("Error fetching order history:", error);
-        }
-      };
-
-      fetchOrderHistory();
-    }
-  }, [isLoggedIn, user]);
 
   //   Redirect ke halaman login jika belum login
   if (!isLoggedIn) {
@@ -89,9 +67,10 @@ const UserProfile: React.FC = () => {
                     Order #{order.id}
                   </p>
                   <p className="text-sm text-gray-400">
-                    {new Date(order.createdAt).toLocaleDateString()}
+                    Date: {new Date(order.date).toLocaleDateString()}
                   </p>
                 </div>
+                <div>Total: ${order.totalAmount.toFixed(2)}</div>
                 <span
                   className={`px-4 py-2 text-xs font-semibold rounded-full ${
                     order.status === "Completed"

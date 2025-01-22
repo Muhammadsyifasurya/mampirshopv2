@@ -16,8 +16,17 @@ interface CartItem {
   image: string;
 }
 
+interface Order {
+  id: string;
+  items: CartItem[];
+  totalAmount: number;
+  date: string;
+  status: string; // Pending, Completed, etc.
+}
+
 interface CartContextProps {
   cartItems: CartItem[];
+  orderHistory: Order[];
   discountCode: string;
   discountAmount: number;
   addToCart: (item: CartItem) => void;
@@ -27,6 +36,7 @@ interface CartContextProps {
   calculateTotal: () => number;
   setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>; // Menambahkan setCartItems
   applyDiscount: (code: string) => void;
+  addOrder: (order: Order) => void;
   cartCount: number;
 }
 
@@ -36,6 +46,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [orderHistory, setOrderHistory] = useState<Order[]>([]);
   const [discountCode, setDiscountCode] = useState<string>("");
   const [discountAmount, setDiscountAmount] = useState<number>(0);
 
@@ -70,6 +81,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     if (storedCart) {
       setCartItems(JSON.parse(storedCart));
     }
+
+    const storedOrders = Cookies.get(`orderHistory_${userId}`);
+    if (storedOrders) {
+      setOrderHistory(JSON.parse(storedOrders));
+    }
   }, []);
 
   // Simpan data keranjang ke localStorage saat ada perubahan
@@ -78,7 +94,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     if (!userId) return;
 
     Cookies.set(`cart_${userId}`, JSON.stringify(cartItems), { expires: 7 }); // Set cookie with 7 days expiry
-  }, [cartItems]);
+    Cookies.set(`orderHistory_${userId}`, JSON.stringify(orderHistory), {
+      expires: 7,
+    });
+  }, [cartItems, orderHistory]);
 
   const addToCart = (item: CartItem) => {
     setCartItems((prevItems) => {
@@ -114,11 +133,16 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     );
   };
 
+  const addOrder = (order: Order) => {
+    setOrderHistory((prevOrders) => [...prevOrders, order]);
+  };
+
   const calculateTotal = () => {
-    return cartItems.reduce(
+    const subtotal = cartItems.reduce(
       (total, item) => total + item.price * item.quantity,
       0
     );
+    return subtotal - subtotal * discountAmount;
   };
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -127,6 +151,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     <CartContext.Provider
       value={{
         cartItems,
+        orderHistory,
         discountCode,
         discountAmount,
         addToCart,
@@ -136,6 +161,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         calculateTotal,
         setCartItems, // Menambahkan setCartItems ke value
         applyDiscount,
+        addOrder,
         cartCount,
       }}
     >

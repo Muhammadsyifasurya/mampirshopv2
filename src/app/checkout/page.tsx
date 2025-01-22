@@ -20,7 +20,14 @@ interface InvoiceDetails {
 }
 
 const CheckoutPage = () => {
-  const { cartItems, calculateTotal, discountCode, discountAmount } = useCart();
+  const {
+    cartItems,
+    calculateTotal,
+    discountCode,
+    discountAmount,
+    addOrder,
+    setCartItems,
+  } = useCart();
   const [invoiceDetails, setInvoiceDetails] = useState<InvoiceDetails | null>(
     null
   );
@@ -42,6 +49,19 @@ const CheckoutPage = () => {
     return <div className="text-center text-xl">Loading...</div>;
   }
 
+  const handlePayment = () => {
+    const newOrder = {
+      id: `INV${Date.now()}`, // unique ID
+      items: cartItems,
+      totalAmount: calculateTotal(),
+      date: new Date().toISOString(),
+      status: "Completed",
+    };
+    addOrder(newOrder);
+    setCartItems([]);
+
+    alert("Order berhasil disimpan!");
+  };
   return (
     <div className="bg-white rounded-lg shadow-lg px-8 py-10 max-w-4xl mx-auto mt-16">
       {/* Header */}
@@ -140,13 +160,7 @@ const CheckoutPage = () => {
       {/* Final Total */}
       <div className="flex justify-between mb-8 text-gray-700 font-bold text-xl">
         <span>Total:</span>
-        <span>
-          $
-          {(
-            invoiceDetails.totalAmount -
-            invoiceDetails.totalAmount * discountAmount
-          ).toFixed(2)}
-        </span>
+        <span>${calculateTotal()}</span>
       </div>
 
       {/* Footer */}
@@ -165,6 +179,7 @@ const CheckoutPage = () => {
           syifamuhammad3139@gmail.com
         </div>
       </div>
+      <button onClick={handlePayment}>Pay Now</button>
     </div>
   );
 };
