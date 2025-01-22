@@ -17,6 +17,7 @@ interface User {
   id: number;
   name: string;
   email: string;
+  avatar: string;
 }
 
 // Tipe data untuk context

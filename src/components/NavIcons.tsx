@@ -68,6 +68,13 @@ const NavIcons = () => {
               >
                 Logout
               </div>
+              {/* Link ke halaman profil */}
+              <Link
+                href="/profile"
+                className="mt-3 block text-gray-600 hover:text-gray-900 hover:underline transition duration-200"
+              >
+                Go to Profile
+              </Link>
             </>
           ) : (
             <>
