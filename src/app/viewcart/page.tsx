@@ -25,14 +25,14 @@ const ViewCartPage = () => {
 
   return (
     <div className="mt-24 min-h-screen py-8">
-      <div className="max-w-6xl mx-auto p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+      <div className="max-w-6xl mx-auto px-14 py-11 bg-white dark:bg-gray-800 shadow-lg rounded-[40px]">
         {!cartItems || cartItems.length === 0 ? (
           <div className="text-center text-2xl font-semibold text-gray-700 dark:text-gray-300">
             Your cart is empty.
           </div>
         ) : (
           <>
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+            <h2 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-6">
               Shopping Cart
             </h2>
             {/* Cart Items */}
@@ -117,10 +117,10 @@ const ViewCartPage = () => {
             {/* Bottom Section */}
             <div className="mt-6">
               <div className="flex justify-between font-semibold text-lg">
-                <span className="text-gray-800 dark:text-gray-100">
+                <span className="text-gray-800 text-3xl dark:text-gray-100">
                   Subtotal
                 </span>
-                <span className="text-gray-800 dark:text-gray-100">
+                <span className="text-gray-800 text-3xl dark:text-gray-100">
                   ${calculateTotal()}
                 </span>
               </div>
