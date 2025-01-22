@@ -30,22 +30,32 @@ const NavIcons = () => {
 
   return (
     <div className="flex items-center gap-4 xl:gap-6 relative">
-      {/* Profile Icon */}
       <button
         aria-label="Profile"
         onClick={handleProfile}
         className="cursor-pointer"
       >
-        <Image
-          src="/profile.svg"
-          alt="Profile Icon"
-          width={25}
-          height={25}
-          style={{
-            filter:
-              "invert(63%) sepia(7%) saturate(232%) hue-rotate(175deg) brightness(90%) contrast(89%)",
-          }}
-        />
+        {/* Cek apakah ada avatar */}
+        {user?.avatar ? (
+          <Image
+            src={user.avatar}
+            alt={`${user?.name}'s Profile`}
+            width={35}
+            height={35}
+            className="rounded-full object-cover"
+          />
+        ) : (
+          <Image
+            src="/profile.svg"
+            alt="Profile Icon"
+            width={25}
+            height={25}
+            style={{
+              filter:
+                "invert(63%) sepia(7%) saturate(232%) hue-rotate(175deg) brightness(90%) contrast(89%)",
+            }}
+          />
+        )}
       </button>
 
       {isProfileOpen ? (
