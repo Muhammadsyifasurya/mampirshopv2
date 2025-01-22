@@ -28,6 +28,7 @@ interface CartContextProps {
   cartItems: CartItem[];
   orderHistory: Order[];
   discountCode: string;
+  handleImage: (img: string) => string;
   discountAmount: number;
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: number) => void;
@@ -147,9 +148,20 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+  const handleImage = (img: string) => {
+    const input = img;
+    const regex = /(https?:\/\/[^\s\[\]"]+)/;
+    const result =
+      input.match(regex)?.[1] ||
+      "https://down-id.img.susercontent.com/file/4d172e17968ca4535120c09e1c0df06c";
+      console.log(result)
+    return result;
+  };
+
   return (
     <CartContext.Provider
       value={{
+        handleImage,
         cartItems,
         orderHistory,
         discountCode,

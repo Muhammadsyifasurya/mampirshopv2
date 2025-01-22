@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { useCart } from "@/context/CartContext";
 
 interface Product {
   id: number;
@@ -20,15 +21,23 @@ const ProductList: React.FC<Product> = ({
   description,
   onAddToCart,
 }) => {
+  const { handleImage } = useCart();
+  const [imgSrc, setImgSrc] = useState(handleImage(images[0]))
+
   return (
     <div className="w-full flex flex-col gap-4 sm:w-[45%] lg:w-[22%] border rounded-2xl">
       <Link href={`/${id}`} className="relative w-full h-80 overflow-hidden">
         <Image
-          src={images[0]}
+          src={imgSrc}
+          onError={() =>
+            setImgSrc(handleImage(
+              "https://down-id.img.susercontent.com/file/4d172e17968ca4535120c09e1c0df06c"
+            ))
+          }
           alt={title || "Product Image"}
           fill
           sizes="25vw"
-          className="absolute object-cover rounded-md z-10 hover:scale-110 transition-all duration-300 ease-in-out transform"
+          className="absolute object-cover rounded-md z-10 hover:scale-110 transition-all duration-300 ease-in-out transform min-w-[25vw]"
         />
       </Link>
       <div className="flex justify-between px-4">
