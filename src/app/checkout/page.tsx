@@ -14,13 +14,13 @@ interface CartItem {
 
 interface InvoiceDetails {
   items: CartItem[];
-  totalAmount: number; // Total jumlah pesanan
-  shippingAddress: string; // Alamat pengiriman
-  paymentMethod: string; // Metode pembayaran
+  totalAmount: number;
+  shippingAddress: string;
+  paymentMethod: string;
 }
 
 const CheckoutPage = () => {
-  const { cartItems, calculateTotal } = useCart();
+  const { cartItems, calculateTotal, discountCode, discountAmount } = useCart();
   const [invoiceDetails, setInvoiceDetails] = useState<InvoiceDetails | null>(
     null
   );
@@ -39,52 +39,63 @@ const CheckoutPage = () => {
   }, [cartItems, calculateTotal]);
 
   if (!invoiceDetails) {
-    return <div>Loading...</div>;
+    return <div className="text-center text-xl">Loading...</div>;
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg px-8 py-10 max-w-xl mx-auto mt-28">
+    <div className="bg-white rounded-lg shadow-lg px-8 py-10 max-w-4xl mx-auto mt-16">
+      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">
           <Image
-            className="h-8 w-8 mr-2"
+            className="h-12 w-12 mr-3"
             src="/MampirShop.webp"
             alt="Logo"
-            width={32} // Tentukan lebar gambar sesuai kebutuhan
-            height={32} // Tentukan tinggi gambar sesuai kebutuhan
+            width={48}
+            height={48}
           />
-          <div className="text-gray-700 font-bold text-2xl">MampirShop</div>
+          <div className="text-gray-700 font-bold text-3xl">MampirShop</div>
         </div>
-        <div className="text-gray-700">
-          <div className="font-bold text-xl mb-2">INVOICE</div>
+        <div className="text-gray-600">
+          <div className="font-semibold text-xl mb-2">INVOICE</div>
           <div className="text-sm">Date: {new Date().toLocaleDateString()}</div>
           <div className="text-sm">
             Invoice #: INV{Math.floor(Math.random() * 100000)}
           </div>
         </div>
       </div>
+
+      {/* Billing Address */}
       <div className="border-b-2 border-gray-300 pb-8 mb-8">
-        <h2 className="text-2xl font-bold mb-4">Bill To:</h2>
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Bill To:</h2>
         <div className="text-gray-700 mb-2">{user?.name}</div>
         <div className="text-gray-700 mb-2">
-          Jl. Parangtritis KM 20, Bantul, Yogyakarta
+          Jl. Parangtritis KM 20, Yogyakarta
         </div>
         <div className="text-gray-700 mb-2">{user?.email}</div>
       </div>
+
+      {/* Items Table */}
       <table className="w-full text-left mb-8">
         <thead>
           <tr>
-            <th className="text-gray-700 font-bold uppercase py-2">
+            <th className="text-gray-700 font-semibold uppercase py-3">
               Description
             </th>
-            <th className="text-gray-700 font-bold uppercase py-2">Quantity</th>
-            <th className="text-gray-700 font-bold uppercase py-2">Price</th>
-            <th className="text-gray-700 font-bold uppercase py-2">Total</th>
+            <th className="text-gray-700 font-semibold uppercase py-3">
+              Quantity
+            </th>
+            <th className="text-gray-700 font-semibold uppercase py-3">
+              Price
+            </th>
+            <th className="text-gray-700 font-semibold uppercase py-3">
+              Total
+            </th>
           </tr>
         </thead>
         <tbody>
           {invoiceDetails.items.map((product: CartItem) => (
-            <tr key={product.id}>
+            <tr key={product.id} className="border-b border-gray-200">
               <td className="py-4 text-gray-700">{product.title}</td>
               <td className="py-4 text-gray-700">{product.quantity}</td>
               <td className="py-4 text-gray-700">
@@ -97,29 +108,49 @@ const CheckoutPage = () => {
           ))}
         </tbody>
       </table>
-      <div className="flex justify-end mb-8">
-        <div className="text-gray-700 mr-2">Subtotal:</div>
-        <div className="text-gray-700">
-          ${invoiceDetails.totalAmount.toFixed(2)}
-        </div>
+
+      {/* Subtotal and Discount */}
+      <div className="flex justify-between mb-8 text-gray-700">
+        <span className="font-medium">Subtotal:</span>
+        <span>${invoiceDetails.totalAmount.toFixed(2)}</span>
       </div>
+
+      {/* Discount Section */}
       <div className="text-right mb-8">
-        <div className="text-gray-700 mr-2">Discount:</div>
-        <div className="text-gray-700">
-          -${(invoiceDetails.totalAmount * 0.1).toFixed(2)}
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-center text-gray-700">
+            <span className="font-medium">Use code:</span>
+            <span className="text-blue-500 font-semibold">{discountCode}</span>
+          </div>
+          <div className="flex justify-between items-center text-gray-700">
+            <span className="font-medium">Discount:</span>
+            <span className="text-green-500 font-semibold">
+              {(discountAmount * 100).toFixed(0)}%
+            </span>
+          </div>
+          <div className="flex justify-between items-center text-gray-700">
+            <span className="font-medium">Total Discount:</span>
+            <span className="text-red-500 font-semibold">
+              -${(invoiceDetails.totalAmount * discountAmount).toFixed(2)}
+            </span>
+          </div>
         </div>
       </div>
-      <div className="flex justify-end mb-8">
-        <div className="text-gray-700 mr-2">Total:</div>
-        <div className="text-gray-700 font-bold text-xl">
+
+      {/* Final Total */}
+      <div className="flex justify-between mb-8 text-gray-700 font-bold text-xl">
+        <span>Total:</span>
+        <span>
           $
           {(
             invoiceDetails.totalAmount -
-            invoiceDetails.totalAmount * 0.1
+            invoiceDetails.totalAmount * discountAmount
           ).toFixed(2)}
-        </div>
+        </span>
       </div>
-      <div className="border-t-2 border-gray-300 pt-8 mb-8">
+
+      {/* Footer */}
+      <div className="border-t-2 border-gray-300 pt-8">
         <div className="text-gray-700 mb-2">Thank you for your business!</div>
         <div className="text-gray-700 mb-2">
           Payment is due within 30 days. Late payments are subject to fees.

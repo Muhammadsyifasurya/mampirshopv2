@@ -18,12 +18,15 @@ interface CartItem {
 
 interface CartContextProps {
   cartItems: CartItem[];
+  discountCode: string;
+  discountAmount: number;
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: number) => void;
   increaseQuantity: (id: number) => void;
   decreaseQuantity: (id: number) => void;
   calculateTotal: () => number;
   setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>; // Menambahkan setCartItems
+  applyDiscount: (code: string) => void;
   cartCount: number;
 }
 
@@ -33,6 +36,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [discountCode, setDiscountCode] = useState<string>("");
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
 
   const getUserId = (): string | null => {
     const user = Cookies.get("user"); // Get user data from cookies
@@ -40,6 +45,20 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
     const parsedUser = JSON.parse(user);
     return parsedUser.id || null;
+  };
+
+  const applyDiscount = (code: string) => {
+    if (code === "DISCOUNT10") {
+      setDiscountAmount(0.1); // 10% discount
+      setDiscountCode(code);
+    } else if (code === "DISCOUNT20") {
+      setDiscountAmount(0.2); // 20% discount
+      setDiscountCode(code);
+    } else {
+      setDiscountAmount(0);
+      setDiscountCode("");
+      alert("Invalid discount code!");
+    }
   };
 
   // Ambil data keranjang berdasarkan userId saat aplikasi dimuat
@@ -108,12 +127,15 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     <CartContext.Provider
       value={{
         cartItems,
+        discountCode,
+        discountAmount,
         addToCart,
         removeFromCart,
         increaseQuantity,
         decreaseQuantity,
         calculateTotal,
         setCartItems, // Menambahkan setCartItems ke value
+        applyDiscount,
         cartCount,
       }}
     >
