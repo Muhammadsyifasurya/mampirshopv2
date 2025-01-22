@@ -12,7 +12,7 @@ Im a Front-End Developer with a strong passion for creating digital experiences 
 
 ## 🌐 About This Website
 
-**ShopSmart** is a responsive online store built with React and Next.js. It features a modern design with various interactive sections, including a product listing page, user authentication (login/register), product categories, and a shopping cart. The website is optimized for a seamless experience across devices, ensuring users can browse, filter, and manage products with ease.
+**MampirShop** is a responsive online store built with React and Next.js. It features a modern design with various interactive sections, including a product listing page, user authentication (login/register), product categories, and a shopping cart. The website is optimized for a seamless experience across devices, ensuring users can browse, filter, and manage products with ease.
 
 Key features include:
 
@@ -37,25 +37,34 @@ The application leverages modern web technologies for enhanced performance, usin
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+## ⚙️ How to Setup
 
-First, run the development server:
+To get this project running on your local machine, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Clone the Repository**  
+   Use the following command to clone the repository:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   git clone https://github.com/Muhammadsyifasurya/mampirshopv2.git
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Enter to the folder**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   cd mampirshopv2
+   ```
+
+3. **Open with Visual Studio Code**
+
+   ```bash
+   code .
+   ```
+
+4. **Run project**
+
+   ```bash
+   npm run dev
+   ```
 
 ## 🧪 Testing Methodologies Used
 
