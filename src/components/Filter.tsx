@@ -12,8 +12,8 @@ const Filter = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [minPrice, setMinPrice] = useState<number>(0);
-  const [maxPrice, setMaxPrice] = useState<number>(10000);
+  const [minPrice, setMinPrice] = useState<number>();
+  const [maxPrice, setMaxPrice] = useState<number>();
   const router = useRouter(); // Inisialisasi router untuk mengubah URL
 
   const fetchCategories = async () => {
@@ -50,7 +50,14 @@ const Filter = () => {
 
   const handleBlur = () => {
     // Update URL query parameter saat minPrice dan maxPrice kehilangan fokus
-    router.push(`/list?page=1&minPrice=${minPrice}&maxPrice=${maxPrice}`);
+    if (
+      (maxPrice == undefined && minPrice == undefined) ||
+      (maxPrice == 0 && minPrice == undefined) ||
+      (maxPrice == undefined && minPrice == 0)
+    ) {
+    } else {
+      router.push(`/list?page=1&minPrice=${minPrice}&maxPrice=${maxPrice}`);
+    }
   };
 
   useEffect(() => {
@@ -60,24 +67,29 @@ const Filter = () => {
   return (
     <div className="mt-12 flex justify-between">
       <div className="flex gap-6 flex-wrap">
-        <input
-          type="text"
-          name="min"
-          placeholder="min price"
-          className="text-xs rounded-2xl pl-2 w-24 ring-1 ring-gray-400"
-          value={minPrice}
-          onChange={handleMinPriceChange}
-          onBlur={handleBlur}
-        />
-        <input
-          type="text"
-          name="max"
-          placeholder="max price"
-          className="text-xs rounded-2xl pl-2 w-24 ring-1 ring-gray-400"
-          value={maxPrice}
-          onChange={handleMaxPriceChange}
-          onBlur={handleBlur}
-        />
+        <div className="flex gap-2">
+          <input
+            type="text"
+            name="min"
+            placeholder="min price"
+            className="text-xs rounded-2xl text-center w-24 ring-1 ring-gray-400"
+            value={minPrice}
+            onChange={handleMinPriceChange}
+            onBlur={handleBlur}
+          />
+          <div className="flex items-center">
+            <p className="border-b-2 w-3 border-[#848383]" />
+          </div>
+          <input
+            type="text"
+            name="max"
+            placeholder="max price"
+            className="text-xs rounded-2xl text-center w-24 ring-1 ring-gray-400"
+            value={maxPrice}
+            onChange={handleMaxPriceChange}
+            onBlur={handleBlur}
+          />
+        </div>
         <select
           title="oke"
           name="type"
