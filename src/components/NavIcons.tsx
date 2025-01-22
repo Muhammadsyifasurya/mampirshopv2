@@ -117,9 +117,11 @@ const NavIcons = () => {
               "invert(63%) sepia(7%) saturate(232%) hue-rotate(175deg) brightness(90%) contrast(89%)",
           }}
         />
-        <div className="absolute -top-4 -right-4 w-6 h-6 bg-[#F35C7A] rounded-full text-white text-sm flex items-center justify-center">
-          {cartCount}
-        </div>
+        {cartCount > 0 && (
+          <p className="absolute -top-4 -right-4 w-6 h-6 bg-[#F35C7A] rounded-full text-white text-sm flex items-center justify-center">
+            {cartCount}
+          </p>
+        )}
       </div>
 
       {isCartOpen && <CartModal closeModal={() => setIsCartOpen(false)} />}
