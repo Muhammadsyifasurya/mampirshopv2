@@ -49,7 +49,7 @@ const NavIcons = () => {
       </button>
 
       {isProfileOpen ? (
-        <div className="absolute pt-6 pb-4 px-7 rounded-lg bg-white top-12 left-0 text-sm shadow-lg z-30 w-32 max-w-[300px]">
+        <div className="absolute pt-6 pb-4 px-7 rounded-lg bg-white top-12 left-0 text-sm shadow-lg z-30 max-w-[300px]">
           <button
             onClick={() => setIsProfileOpen(false)}
             className="absolute top-[1px] right-2 text-xl text-gray-600 hover:text-gray-800 transition duration-200"
