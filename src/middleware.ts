@@ -16,7 +16,10 @@ export function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   // Jika role user adalah admin dan mencoba mengakses halaman admin, lanjutkan
-  if (role === "admin" && pathname.startsWith("/admin")) {
+  if (
+    (role === "admin" && pathname.startsWith("/admin")) ||
+    pathname.startsWith("/checkout")
+  ) {
     return NextResponse.next();
   }
 
