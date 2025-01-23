@@ -90,6 +90,18 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "external-content.duckduckgo.com",
+      },
+      {
+        protocol: "https",
+        hostname: "mir-s3-cdn-cf.behance.net",
+      },
+      {
+        protocol: "https",
+        hostname: "www.iconpacks.net",
+      },
+      {
+        protocol: "https",
         hostname: "via.placeholder.com",
       },
       {

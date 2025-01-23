@@ -46,7 +46,7 @@ const CartModal = ({ closeModal }: { closeModal: () => void }) => {
                   alt={item.title}
                   width={72}
                   height={96}
-                  className="object-cover rounded-md"
+                  className="object-cover max-w-16 rounded-md"
                 />
                 <div className="flex flex-col justify-between w-full">
                   {/* TOP */}

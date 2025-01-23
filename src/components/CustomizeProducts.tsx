@@ -6,11 +6,13 @@ const CustomizeProducts = () => {
       <h4 className="font-medium">Choose a color</h4>
       <ul className="flex gap-3 items-center">
         <li className="w-8 h-8 rounded-full ring-1 ring-gray-300 cursor-pointer relative bg-red-500">
-          <div className="absolute w-10 h-10 rounded-full ring-2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+          <button className="absolute w-10 h-10 rounded-full focus:ring-2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></button>
         </li>
-        <li className="w-8 h-8 rounded-full ring-1 ring-gray-300 cursor-pointer relative bg-blue-500"></li>
+        <li className="w-8 h-8 rounded-full ring-1 ring-gray-300 cursor-pointer relative bg-blue-500">
+          <button className="absolute w-10 h-10 rounded-full focus:ring-2 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></button>
+        </li>
         <li className="w-8 h-8 rounded-full ring-1 ring-gray-300 cursor-not-allowed relative bg-green-500">
-          <div className="absolute w-10 h-[2px] bg-red-400 rotate-45 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+          <button className="absolute w-10 h-[2px] focus:ring-2 bg-red-400 rotate-45 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></button>
         </li>
       </ul>
       <h4 className="font-medium">Choose a size</h4>

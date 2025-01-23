@@ -11,7 +11,7 @@ const Page = async () => {
   const limitproducts = products.slice(0, 4);
 
   return (
-    <div className="">
+    <>
       {/* Slider tetap bisa dipanggil di sini, jika ingin dirender di sisi klien */}
       <Slider />
 
@@ -23,7 +23,7 @@ const Page = async () => {
 
       {/* Panggil NewProducts */}
       <NewProducts products={limitproducts} />
-    </div>
+    </>
   );
 };
 

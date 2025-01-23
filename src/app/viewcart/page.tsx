@@ -14,6 +14,7 @@ const ViewCartPage = () => {
     increaseQuantity,
     decreaseQuantity,
     calculateTotal,
+    handleImage,
   } = useCart();
 
   const [inputDiscountCode, setInputDiscountCode] = useState("");
@@ -43,7 +44,7 @@ const ViewCartPage = () => {
                   className="flex items-center gap-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow-sm"
                 >
                   <Image
-                    src={item.image}
+                    src={handleImage(item.image)}
                     alt={item.title}
                     width={80}
                     height={100}
