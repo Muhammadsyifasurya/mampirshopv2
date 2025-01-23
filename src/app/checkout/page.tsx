@@ -147,7 +147,11 @@ const CheckoutPage = () => {
       {/* Subtotal and Discount */}
       <div className="flex justify-between mb-8 text-gray-700 dark:text-gray-300">
         <span className="font-medium">Subtotal:</span>
-        <span>${invoiceDetails.totalAmount.toFixed(2)}</span>
+        <span>
+          $
+          {invoiceDetails.totalAmount +
+            invoiceDetails.totalAmount * discountAmount}
+        </span>
       </div>
 
       {/* Discount Section */}
