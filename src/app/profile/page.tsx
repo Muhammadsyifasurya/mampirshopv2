@@ -1,20 +1,12 @@
 "use client";
 import React from "react";
 import { useUser } from "@/context/AuthContext"; // Pastikan import dari UserContext
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 
 const UserProfile: React.FC = () => {
-  const { isLoggedIn, user, logout } = useUser();
+  const { user, logout } = useUser();
   const { orderHistory } = useCart();
-  const router = useRouter();
-
-  //   Redirect ke halaman login jika belum login
-  if (!isLoggedIn) {
-    router.push("/login");
-    return null;
-  }
 
   return (
     <div className="profile-container py-12 px-8 max-w-5xl mx-auto mt-24 bg-gradient-to-r from-gray-800 via-gray-900 to-black rounded-3xl shadow-xl">

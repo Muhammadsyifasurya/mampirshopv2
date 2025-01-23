@@ -22,7 +22,7 @@ const ProductList: React.FC<Product> = ({
   onAddToCart,
 }) => {
   const { handleImage } = useCart();
-  const [imgSrc, setImgSrc] = useState(handleImage(images[0]))
+  const [imgSrc, setImgSrc] = useState(handleImage(images[0]));
 
   return (
     <div className="w-full flex flex-col gap-4 sm:w-[45%] lg:w-[22%] border rounded-2xl">
@@ -30,9 +30,11 @@ const ProductList: React.FC<Product> = ({
         <Image
           src={imgSrc}
           onError={() =>
-            setImgSrc(handleImage(
-              "https://down-id.img.susercontent.com/file/4d172e17968ca4535120c09e1c0df06c"
-            ))
+            setImgSrc(
+              handleImage(
+                "https://down-id.img.susercontent.com/file/4d172e17968ca4535120c09e1c0df06c"
+              )
+            )
           }
           alt={title || "Product Image"}
           fill
@@ -41,7 +43,7 @@ const ProductList: React.FC<Product> = ({
         />
       </Link>
       <div className="flex justify-between px-4">
-        <span className="font-medium">{title.slice(0, 25)}...</span>
+        <span className="font-medium">{title.slice(0, 22)}...</span>
         <span className="font-semibold">${price}</span>
       </div>
       <div className="text-sm text-gray-500 px-4">
