@@ -11,6 +11,7 @@ const CartModal = ({ closeModal }: { closeModal: () => void }) => {
     increaseQuantity,
     decreaseQuantity,
     calculateTotal,
+    handleImage,
   } = useCart();
 
   return (
@@ -32,7 +33,16 @@ const CartModal = ({ closeModal }: { closeModal: () => void }) => {
             {cartItems.map((item) => (
               <div key={item.id} className="flex items-center gap-4">
                 <Image
-                  src={item.image}
+                  src={
+                    handleImage(item.image) ||
+                    handleImage(
+                      "https://down-id.img.susercontent.com/file/4d172e17968ca4535120c09e1c0df06c"
+                    )
+                  }
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src =
+                      "https://down-id.img.susercontent.com/file/4d172e17968ca4535120c09e1c0df06c";
+                  }}
                   alt={item.title}
                   width={72}
                   height={96}

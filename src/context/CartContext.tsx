@@ -60,22 +60,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     return parsedUser.id || null;
   };
 
-  // Ambil data keranjang berdasarkan userId saat aplikasi dimuat
-  // useEffect(() => {
-  //   const userId = getUserId();
-  //   if (!userId) return;
-
-  //   const storedCart = Cookies.get(`cart_${userId}`);
-  //   if (storedCart) {
-  //     setCartItems(JSON.parse(storedCart));
-  //   }
-
-  //   const storedOrders = Cookies.get(`orderHistory_${userId}`);
-  //   if (storedOrders) {
-  //     setOrderHistory(JSON.parse(storedOrders));
-  //   }
-  // }, []);
-
   // Simpan data keranjang ke localStorage saat ada perubahan
   useEffect(() => {
     const userId = getUserId();
