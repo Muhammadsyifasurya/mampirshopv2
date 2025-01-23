@@ -1,23 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link"; // Import Link dari react-router-dom
 import Menu from "./Menu";
 import Image from "next/image";
 import Searchbar from "./Searchbar";
 import NavIcons from "./NavIcons";
-import Cookies from "js-cookie";
+import { useUser } from "@/context/AuthContext";
 
 const Navbar = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { user, isLoggedIn } = useUser();
 
-  useEffect(() => {
-    const user = Cookies.get("user");
-    console.log(user);
-    if (user) {
-      const parsedUser = JSON.parse(user);
-      setIsAdmin(parsedUser.role === "admin");
-    }
-  }, []);
   return (
     <>
       <div className="h-20 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 bg-[#1E293B] fixed z-20 w-full">
@@ -56,7 +48,7 @@ const Navbar = () => {
               >
                 Category
               </Link>
-              {isAdmin && (
+              {isLoggedIn && user?.role === "admin" && (
                 <Link
                   href="/admin"
                   className="relative after:content-[''] after:block after:w-0 after:h-0.5 after:bg-[#A0AEC0] after:transition-all after:duration-300 hover:after:w-full"
