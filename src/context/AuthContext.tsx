@@ -36,12 +36,22 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const { setCartItems } = useCart();
+  const { setCartItems, setOrderHistory } = useCart();
 
   const login = (user: User) => {
     setIsLoggedIn(true);
     setUser(user);
     Cookie.set("user", JSON.stringify(user), { expires: 1 });
+
+    const userId = user.id;
+    const storedCart = Cookie.get(`cart_${userId}`);
+    if (storedCart) {
+      setCartItems(JSON.parse(storedCart));
+    }
+    const storedOrders = Cookie.get(`orderHistory_${userId}`);
+    if (storedOrders) {
+      setOrderHistory(JSON.parse(storedOrders));
+    }
   };
 
   const logout = () => {
@@ -58,8 +68,17 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       const user = JSON.parse(storedUser);
       setUser(user);
       setIsLoggedIn(true);
+      const userId = user.id;
+      const storedCart = Cookie.get(`cart_${userId}`);
+      if (storedCart) {
+        setCartItems(JSON.parse(storedCart));
+      }
+      const storedOrders = Cookie.get(`orderHistory_${userId}`);
+      if (storedOrders) {
+        setOrderHistory(JSON.parse(storedOrders));
+      }
     }
-  }, []);
+  }, [setCartItems, setOrderHistory]);
 
   return (
     <UserContext.Provider value={{ isLoggedIn, user, login, logout }}>

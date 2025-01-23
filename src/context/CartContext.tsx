@@ -35,6 +35,7 @@ interface CartContextProps {
   increaseQuantity: (id: number) => void;
   decreaseQuantity: (id: number) => void;
   calculateTotal: () => number;
+  setOrderHistory: React.Dispatch<React.SetStateAction<Order[]>>;
   setCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>; // Menambahkan setCartItems
   applyDiscount: (code: string) => void;
   addOrder: (order: Order) => void;
@@ -52,12 +53,39 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   const [discountAmount, setDiscountAmount] = useState<number>(0);
 
   const getUserId = (): string | null => {
-    const user = Cookies.get("user"); // Get user data from cookies
-    if (!user) return null;
+    const storedUser = Cookies.get("user"); // Get user data from cookies
+    if (!storedUser) return null;
 
-    const parsedUser = JSON.parse(user);
+    const parsedUser = JSON.parse(storedUser);
     return parsedUser.id || null;
   };
+
+  // Ambil data keranjang berdasarkan userId saat aplikasi dimuat
+  // useEffect(() => {
+  //   const userId = getUserId();
+  //   if (!userId) return;
+
+  //   const storedCart = Cookies.get(`cart_${userId}`);
+  //   if (storedCart) {
+  //     setCartItems(JSON.parse(storedCart));
+  //   }
+
+  //   const storedOrders = Cookies.get(`orderHistory_${userId}`);
+  //   if (storedOrders) {
+  //     setOrderHistory(JSON.parse(storedOrders));
+  //   }
+  // }, []);
+
+  // Simpan data keranjang ke localStorage saat ada perubahan
+  useEffect(() => {
+    const userId = getUserId();
+    if (!userId) return;
+
+    Cookies.set(`cart_${userId}`, JSON.stringify(cartItems), { expires: 7 }); // Set cookie with 7 days expiry
+    Cookies.set(`orderHistory_${userId}`, JSON.stringify(orderHistory), {
+      expires: 7,
+    });
+  }, [cartItems, orderHistory]);
 
   const applyDiscount = (code: string) => {
     if (code === "DISCOUNT10") {
@@ -72,33 +100,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
       alert("Invalid discount code!");
     }
   };
-
-  // Ambil data keranjang berdasarkan userId saat aplikasi dimuat
-  useEffect(() => {
-    const userId = getUserId();
-    if (!userId) return;
-
-    const storedCart = Cookies.get(`cart_${userId}`);
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
-    }
-
-    const storedOrders = Cookies.get(`orderHistory_${userId}`);
-    if (storedOrders) {
-      setOrderHistory(JSON.parse(storedOrders));
-    }
-  }, []);
-
-  // Simpan data keranjang ke localStorage saat ada perubahan
-  useEffect(() => {
-    const userId = getUserId();
-    if (!userId) return;
-
-    Cookies.set(`cart_${userId}`, JSON.stringify(cartItems), { expires: 7 }); // Set cookie with 7 days expiry
-    Cookies.set(`orderHistory_${userId}`, JSON.stringify(orderHistory), {
-      expires: 7,
-    });
-  }, [cartItems, orderHistory]);
 
   const addToCart = (item: CartItem) => {
     setCartItems((prevItems) => {
@@ -154,13 +155,14 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     const result =
       input.match(regex)?.[1] ||
       "https://down-id.img.susercontent.com/file/4d172e17968ca4535120c09e1c0df06c";
-      console.log(result)
+    console.log(result);
     return result;
   };
 
   return (
     <CartContext.Provider
       value={{
+        setOrderHistory,
         handleImage,
         cartItems,
         orderHistory,

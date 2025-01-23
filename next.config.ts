@@ -92,6 +92,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "via.placeholder.com",
       },
+      {
+        protocol: "https",
+        hostname: "letsenhance.io",
+      },
+      {
+        protocol: "https",
+        hostname: "img.freepik.com",
+      },
     ],
   },
 };
