@@ -25,7 +25,7 @@ const ProductList: React.FC<Product> = ({
   const [imgSrc, setImgSrc] = useState(handleImage(images[0]));
 
   return (
-    <div className="w-full flex flex-col gap-4 sm:w-[45%] lg:w-[22%] border rounded-2xl">
+    <div className="w-full flex flex-col gap-4 sm:w-[45%] lg:w-[22%] border rounded-2xl overflow-hidden">
       <Link href={`/${id}`} className="relative w-full h-80 overflow-hidden">
         <Image
           src={imgSrc}
@@ -39,7 +39,7 @@ const ProductList: React.FC<Product> = ({
           alt={title || "Product Image"}
           fill
           sizes="25vw"
-          className="absolute object-cover rounded-md z-10 hover:scale-110 transition-all duration-300 ease-in-out transform min-w-[25vw]"
+          className="absolute object-cover  z-10 hover:scale-110 transition-all duration-300 ease-in-out transform min-w-[25vw]"
         />
       </Link>
       <div className="flex justify-between px-4">

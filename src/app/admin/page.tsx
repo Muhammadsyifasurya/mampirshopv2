@@ -10,19 +10,19 @@ const AdminDashboard = () => {
   useEffect(() => {
     const user = Cookies.get("user");
     if (!user) {
-      router.push("/login"); // Redirect jika tidak login
+      router.push("/login");
       return;
     }
 
     const parsedUser = JSON.parse(user);
     if (parsedUser.role !== "admin") {
-      router.push("/"); // Redirect jika bukan admin
+      router.push("/");
     }
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white">
-      <div className="container mx-auto py-12 px-6">
+    <div className="h-screen mt-24 text-white rounded-3xl">
+      <div className="container  bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 rounded-3xl mx-auto py-12 px-6">
         {/* Header */}
         <header className="mb-12">
           <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">

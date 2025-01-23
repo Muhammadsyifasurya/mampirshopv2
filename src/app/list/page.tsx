@@ -147,7 +147,7 @@ const ListPage: React.FC = () => {
         </>
       )}
 
-      <div className="flex flex-wrap gap-10 mt-12 justify-center">
+      <div className="flex flex-wrap gap-x-[4%] gap-y-10 mt-12 justify-start">
         {products.length > 0
           ? products.map((product: Product) => (
               <ProductList
