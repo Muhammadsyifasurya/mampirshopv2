@@ -16,7 +16,7 @@ interface Product {
   price: number;
   description: string;
   images: string[];
-  categoryId: string;
+  categoryId: number;
 }
 
 const ListPage: React.FC = () => {
@@ -93,7 +93,7 @@ const ListPage: React.FC = () => {
       title: product.title,
       price: product.price.toString(),
       description: product.description,
-      categoryId: product.categoryId,
+      categoryId: product.categoryId.toString(),
       images: product.images[0],
     });
   };
@@ -117,7 +117,7 @@ const ListPage: React.FC = () => {
               title: formData.title,
               price: parseFloat(formData.price),
               description: formData.description,
-              categoryId: formData.categoryId,
+              categoryId: parseInt(formData.categoryId, 10), // Convert back to number
               images: [formData.images],
             }
           : product
