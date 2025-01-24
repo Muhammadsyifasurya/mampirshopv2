@@ -1,10 +1,11 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import ProductList from "@/components/ProductList";
 import ProductForm from "@/components/ProductForm";
 import { useCart } from "@/context/CartContext";
 import Popup from "./Popup";
 import { deleteData, updateData } from "@/app/service/api";
+import usePagination from "@/hooks/usePagination";
 
 interface ProductData {
   title: string;
@@ -29,7 +30,6 @@ interface Props {
 
 const Pagination = ({ products }: Props) => {
   const [productList, setProductList] = useState<Product[]>(products);
-  const [currentPage, setCurrentPage] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -41,24 +41,16 @@ const Pagination = ({ products }: Props) => {
     images: "",
   });
 
-  const productsPerPage = 8;
-  const totalPages = Math.ceil(productList.length / productsPerPage);
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = productList.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  );
+  // Gunakan custom hook untuk pagination
+  const {
+    currentItems: currentProducts,
+    currentPage,
+    totalPages,
+    nextPage,
+    prevPage,
+  } = usePagination(productList, 8);
 
   const { addToCart } = useCart();
-
-  const nextPage = useCallback(() => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  }, [currentPage, totalPages]);
-
-  const prevPage = useCallback(() => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  }, [currentPage]);
 
   const handleShowPopup = () => {
     setShowPopup(true);
@@ -120,7 +112,7 @@ const Pagination = ({ products }: Props) => {
               price: parseFloat(formData.price),
               description: formData.description,
               categoryId: formData.categoryId,
-              images: [formData.images], // Bungkus string ke dalam array
+              images: [formData.images],
             }
           : product
       )
@@ -195,7 +187,6 @@ const Pagination = ({ products }: Props) => {
         </button>
       </div>
 
-      {/* Modal Popup */}
       {isEditing && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-gray-800 p-4 rounded-lg shadow-lg relative">
