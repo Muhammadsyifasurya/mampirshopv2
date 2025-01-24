@@ -6,6 +6,7 @@ interface Product {
   images: string[];
   price: number;
   description: string;
+  categoryId: string;
 }
 
 const FeaturedProducts = ({ products }: { products: Product[] }) => {

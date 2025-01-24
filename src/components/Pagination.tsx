@@ -18,7 +18,7 @@ interface Props {
   products: Product[];
 }
 
-const ProductsWithPagination = ({ products }: Props) => {
+const Pagination = ({ products }: Props) => {
   const [productList, setProductList] = useState<Product[]>(products);
   const [currentPage, setCurrentPage] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
@@ -190,4 +190,4 @@ const ProductsWithPagination = ({ products }: Props) => {
   );
 };
 
-export default ProductsWithPagination;
+export default Pagination;
