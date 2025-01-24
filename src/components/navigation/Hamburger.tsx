@@ -1,5 +1,3 @@
-import "../app/globals.css";
-
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;

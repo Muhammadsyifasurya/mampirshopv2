@@ -1,21 +1,14 @@
 "use client";
 
-import Add from "@/components/Add";
-import CustomizeProducts from "@/components/CustomizeProducts";
-import Popup from "@/components/Popup";
-import ProductImages from "@/components/ProductImages";
+import Add from "@/components/ui/Add";
+import CustomizeProducts from "@/components/products/CustomizeProducts";
+import Popup from "@/components/ui/Popup";
+import ProductImages from "@/components/products/ProductImages";
 import { useCart } from "@/context/CartContext";
 import React, { useEffect, useState } from "react";
 import { getDataResponse } from "../service/api";
 import { useParams } from "next/navigation";
-
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  images: string[];
-}
+import { Product } from "@/interfaces/Props";
 
 const SinglePage: React.FC = () => {
   const params = useParams();

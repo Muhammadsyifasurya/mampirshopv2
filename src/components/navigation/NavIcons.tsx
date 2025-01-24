@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import CartModal from "./CartModal";
+import CartModal from "../ui/CartModal";
 import { useCart } from "@/context/CartContext";
 import { useUser } from "@/context/AuthContext";
 

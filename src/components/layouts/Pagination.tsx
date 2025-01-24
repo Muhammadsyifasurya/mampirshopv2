@@ -1,41 +1,41 @@
 "use client";
-import ProductList from "@/components/ProductList";
-import { useCart } from "@/context/CartContext";
-import Popup from "./Popup";
 import { useState } from "react";
-import ProductForm from "./ProductForm";
+import ProductList from "@/components/products/ProductList";
+import ProductForm from "@/components/products/ProductForm";
+import { useCart } from "@/context/CartContext";
+
 import { deleteData, updateData } from "@/app/service/api";
+import usePagination from "@/hooks/usePagination";
+import { Product, ProductData } from "@/interfaces/Props";
+import Popup from "../ui/Popup";
 
-interface Product {
-  id: number;
-  title: string;
-  images: string[];
-  price: number;
-  description: string;
-  categoryId: number | null; // Keep consistent with the rest of your app
+interface Props {
+  products: Product[];
 }
 
-interface ProductData {
-  title: string;
-  price: number;
-  description: string;
-  categoryId: number | null;
-  images: string[];
-}
-
-const NewProducts = ({ products }: { products: Product[] }) => {
-  const { addToCart } = useCart();
-  const [productList, setProductList] = useState<Product[]>(products); // Renamed state to productList
-  const [showPopup, setShowPopup] = useState<boolean>(false);
+const Pagination = ({ products }: Props) => {
+  const [productList, setProductList] = useState<Product[]>(products);
+  const [showPopup, setShowPopup] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<ProductData>({
     title: "",
     price: 0,
     description: "",
-    categoryId: null, // Keep as string for form handling
+    categoryId: null,
     images: [],
   });
+
+  // Gunakan custom hook untuk pagination
+  const {
+    currentItems: currentProducts,
+    currentPage,
+    totalPages,
+    nextPage,
+    prevPage,
+  } = usePagination(productList, 8);
+
+  const { addToCart } = useCart();
 
   const handleShowPopup = () => {
     setShowPopup(true);
@@ -117,7 +117,6 @@ const NewProducts = ({ products }: { products: Product[] }) => {
     } catch (error) {
       console.error("Error updating product:", error);
     }
-
     setIsEditing(false);
     setEditingProduct(null);
   };
@@ -128,18 +127,55 @@ const NewProducts = ({ products }: { products: Product[] }) => {
   };
 
   return (
-    <div className="mt-24 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
-      {/* Popup for Add to Cart */}
+    <div>
       <Popup
-        message="Item Berhasil ditambahkan ke keranjang !"
+        message="Item Berhasil ditambahkan ke keranjang!"
         isVisible={showPopup}
+        type="success"
         onClose={() => setShowPopup(false)}
       />
+      <div className="flex flex-wrap justify-between gap-10 w-[100%]">
+        {currentProducts.map((product) => (
+          <ProductList
+            key={product.id}
+            id={product.id}
+            title={product.title}
+            images={product.images}
+            price={product.price}
+            description={product.description}
+            onAddToCart={() => handleAddToCart(product)}
+            onDelete={handleDelete}
+            onEdit={() => handleEditStart(product)}
+          />
+        ))}
+      </div>
 
-      {/* Edit Product Form */}
+      <div className="flex justify-between mt-8">
+        <button
+          onClick={prevPage}
+          className={`bg-gray-500 text-white px-4 py-2 rounded ${
+            currentPage === 1 ? "disabled:bg-gray-300" : ""
+          }`}
+          disabled={currentPage === 1}
+          aria-label="Previous page"
+        >
+          Previous
+        </button>
+        <button
+          onClick={nextPage}
+          className={`bg-gray-500 text-white px-4 py-2 rounded ${
+            currentPage === totalPages ? "disabled:bg-gray-300" : ""
+          }`}
+          disabled={currentPage === totalPages}
+          aria-label="Next page"
+        >
+          Next
+        </button>
+      </div>
+
       {isEditing && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-4 rounded-lg shadow-lg relative max-w-2xl">
+          <div className="bg-gray-800 p-4 rounded-lg shadow-lg relative">
             <button
               onClick={handleCancel}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
@@ -155,27 +191,8 @@ const NewProducts = ({ products }: { products: Product[] }) => {
           </div>
         </div>
       )}
-
-      <h1 className="text-2xl">New Products</h1>
-
-      {/* Product List */}
-      <div className="flex flex-wrap gap-10 mt-12 justify-between">
-        {productList.map((product) => (
-          <ProductList
-            id={product.id}
-            key={product.id}
-            title={product.title}
-            images={product.images}
-            price={product.price}
-            description={product.description}
-            onAddToCart={() => handleAddToCart(product)}
-            onDelete={() => handleDelete(product.id)}
-            onEdit={() => handleEditStart(product)}
-          />
-        ))}
-      </div>
     </div>
   );
 };
 
-export default NewProducts;
+export default Pagination;

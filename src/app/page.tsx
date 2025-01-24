@@ -1,8 +1,8 @@
 import { getDataResponse } from "./service/api";
-import FeaturedProducts from "@/components/FeaturedProducts";
-import CategorySection from "@/components/CategorySection";
-import NewProducts from "@/components/NewProducts";
-import Slider from "@/components/Slider";
+import FeaturedProducts from "@/components/products/FeaturedProducts";
+import CategorySection from "@/components/categories/CategorySection";
+import NewProducts from "@/components/products/NewProducts";
+import Slider from "@/components/ui/Slider";
 
 const Page = async () => {
   const products = await getDataResponse("/products");

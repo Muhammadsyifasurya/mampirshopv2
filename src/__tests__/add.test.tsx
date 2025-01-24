@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import Add from "../components/Add"; // Adjust the import path as necessary
+import Add from "../components/ui/Add"; // Adjust the import path as necessary
 
 // Mock function for onAddToCart
 const mockAddToCart = jest.fn();

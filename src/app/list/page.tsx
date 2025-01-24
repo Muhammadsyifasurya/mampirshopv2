@@ -4,28 +4,12 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { deleteData, getDataResponse, updateData } from "../service/api";
 import { useCart } from "@/context/CartContext";
-import Popup from "@/components/Popup";
-import ProductList from "@/components/ProductList";
-import ProductForm from "@/components/ProductForm";
-import Filter from "@/components/Filter";
+import Popup from "@/components/ui/Popup";
+import ProductList from "@/components/products/ProductList";
+import ProductForm from "@/components/products/ProductForm";
+import Filter from "@/components/ui/Filter";
 import Image from "next/image";
-
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  images: string[];
-  categoryId: number | null;
-}
-
-interface ProductData {
-  title: string;
-  price: number;
-  description: string;
-  categoryId: number | null;
-  images: string[];
-}
+import { Product, ProductData } from "@/interfaces/Props";
 
 const ListPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);

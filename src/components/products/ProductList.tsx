@@ -36,6 +36,7 @@ const ProductList: React.FC<Product> = ({
         href={`/${id}`}
         className="relative h-80 overflow-hidden min-w-[340px]"
       >
+        <div className="size-full z-[9] animate-pulse bg-gray-500"></div>
         <Image
           src={imgSrc}
           onError={() =>

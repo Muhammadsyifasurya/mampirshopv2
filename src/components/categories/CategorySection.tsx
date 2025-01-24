@@ -1,4 +1,4 @@
-import CategoryList from "@/components/CategoryList";
+import CategoryList from "@/components/categories/CategoryList";
 
 interface CategoryProps {
   id: number;

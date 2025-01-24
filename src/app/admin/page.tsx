@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import ProductForm from "@/components/ProductForm"; // Import komponen form
+import ProductForm from "@/components/products/ProductForm"; // Import komponen form
 
 const AdminDashboard = () => {
   const router = useRouter();
@@ -27,7 +27,7 @@ const AdminDashboard = () => {
     if (parsedUser.role !== "admin") {
       router.push("/");
     }
-  }, []);
+  });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

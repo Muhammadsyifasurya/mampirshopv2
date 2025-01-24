@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../../context/CartContext";
 import Link from "next/link";
 
 const CartModal = ({ closeModal }: { closeModal: () => void }) => {

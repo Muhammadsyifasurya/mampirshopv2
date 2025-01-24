@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom"; // Untuk matcher tambahan
-import Popup from "../components/Popup"; // Adjust the path based on your file structure
+import Popup from "../components/ui/Popup"; // Adjust the path based on your file structure
 
 describe("Popup Component", () => {
   test("renders correctly when visible", () => {

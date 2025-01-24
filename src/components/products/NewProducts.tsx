@@ -1,56 +1,25 @@
 "use client";
-import { useState } from "react";
-import ProductList from "@/components/ProductList";
-import ProductForm from "@/components/ProductForm";
+import ProductList from "@/components/products/ProductList";
 import { useCart } from "@/context/CartContext";
-import Popup from "./Popup";
+import { useState } from "react";
 import { deleteData, updateData } from "@/app/service/api";
-import usePagination from "@/hooks/usePagination";
+import { Product, ProductData } from "@/interfaces/Props";
+import Popup from "../ui/Popup";
+import ProductForm from "./ProductForm";
 
-interface ProductData {
-  title: string;
-  price: number;
-  description: string;
-  categoryId: number | null;
-  images: string[];
-}
-
-interface Product {
-  id: number;
-  title: string;
-  images: string[];
-  price: number;
-  description: string;
-  categoryId: number | null;
-}
-
-interface Props {
-  products: Product[];
-}
-
-const Pagination = ({ products }: Props) => {
-  const [productList, setProductList] = useState<Product[]>(products);
-  const [showPopup, setShowPopup] = useState(false);
+const NewProducts = ({ products }: { products: Product[] }) => {
+  const { addToCart } = useCart();
+  const [productList, setProductList] = useState<Product[]>(products); // Renamed state to productList
+  const [showPopup, setShowPopup] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState<ProductData>({
     title: "",
     price: 0,
     description: "",
-    categoryId: null,
+    categoryId: null, // Keep as string for form handling
     images: [],
   });
-
-  // Gunakan custom hook untuk pagination
-  const {
-    currentItems: currentProducts,
-    currentPage,
-    totalPages,
-    nextPage,
-    prevPage,
-  } = usePagination(productList, 8);
-
-  const { addToCart } = useCart();
 
   const handleShowPopup = () => {
     setShowPopup(true);
@@ -132,6 +101,7 @@ const Pagination = ({ products }: Props) => {
     } catch (error) {
       console.error("Error updating product:", error);
     }
+
     setIsEditing(false);
     setEditingProduct(null);
   };
@@ -142,55 +112,18 @@ const Pagination = ({ products }: Props) => {
   };
 
   return (
-    <div>
+    <div className="mt-24 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
+      {/* Popup for Add to Cart */}
       <Popup
-        message="Item Berhasil ditambahkan ke keranjang!"
+        message="Item Berhasil ditambahkan ke keranjang !"
         isVisible={showPopup}
-        type="success"
         onClose={() => setShowPopup(false)}
       />
-      <div className="flex flex-wrap justify-between gap-10 w-[100%]">
-        {currentProducts.map((product) => (
-          <ProductList
-            key={product.id}
-            id={product.id}
-            title={product.title}
-            images={product.images}
-            price={product.price}
-            description={product.description}
-            onAddToCart={() => handleAddToCart(product)}
-            onDelete={handleDelete}
-            onEdit={() => handleEditStart(product)}
-          />
-        ))}
-      </div>
 
-      <div className="flex justify-between mt-8">
-        <button
-          onClick={prevPage}
-          className={`bg-gray-500 text-white px-4 py-2 rounded ${
-            currentPage === 1 ? "disabled:bg-gray-300" : ""
-          }`}
-          disabled={currentPage === 1}
-          aria-label="Previous page"
-        >
-          Previous
-        </button>
-        <button
-          onClick={nextPage}
-          className={`bg-gray-500 text-white px-4 py-2 rounded ${
-            currentPage === totalPages ? "disabled:bg-gray-300" : ""
-          }`}
-          disabled={currentPage === totalPages}
-          aria-label="Next page"
-        >
-          Next
-        </button>
-      </div>
-
+      {/* Edit Product Form */}
       {isEditing && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-4 rounded-lg shadow-lg relative">
+          <div className="bg-gray-800 p-4 rounded-lg shadow-lg relative max-w-2xl">
             <button
               onClick={handleCancel}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
@@ -206,8 +139,27 @@ const Pagination = ({ products }: Props) => {
           </div>
         </div>
       )}
+
+      <h1 className="text-2xl">New Products</h1>
+
+      {/* Product List */}
+      <div className="flex flex-wrap gap-10 mt-12 justify-between">
+        {productList.map((product) => (
+          <ProductList
+            id={product.id}
+            key={product.id}
+            title={product.title}
+            images={product.images}
+            price={product.price}
+            description={product.description}
+            onAddToCart={() => handleAddToCart(product)}
+            onDelete={() => handleDelete(product.id)}
+            onEdit={() => handleEditStart(product)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
 
-export default Pagination;
+export default NewProducts;
