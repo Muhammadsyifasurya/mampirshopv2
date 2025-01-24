@@ -1,4 +1,5 @@
 "use client";
+
 import Filter from "@/components/Filter";
 import ProductList from "@/components/ProductList";
 import Image from "next/image";
@@ -7,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { getDataResponse } from "../service/api";
 import { useCart } from "@/context/CartContext";
 import Popup from "@/components/Popup";
+import ProductForm from "@/components/ProductForm";
 
 interface Product {
   id: number;
@@ -14,6 +16,7 @@ interface Product {
   price: number;
   description: string;
   images: string[];
+  categoryId: string;
 }
 
 const ListPage: React.FC = () => {
@@ -23,6 +26,15 @@ const ListPage: React.FC = () => {
   const searchParams = useSearchParams();
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const { addToCart } = useCart();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    price: "",
+    description: "",
+    categoryId: "",
+    images: "",
+  });
 
   useEffect(() => {
     if (typeof window === "undefined") return; // Hindari penggunaan di SSR
@@ -30,10 +42,12 @@ const ListPage: React.FC = () => {
     const categoryId = searchParams.get("categoryId");
     const minPrice = Number(searchParams.get("minPrice")) || 0;
     const maxPrice = Number(searchParams.get("maxPrice")) || 10000;
+
     const fetchProducts = async () => {
       try {
         setProducts([]); // Clear konten saat loading dimulai
         setLoading(true);
+        setError(null);
         const endpoint = `/products/?title=${nameQuery}${
           categoryId ? `&categoryId=${categoryId}` : ""
         }&price_min=${minPrice}&price_max=${maxPrice}`;
@@ -68,8 +82,77 @@ const ListPage: React.FC = () => {
     handleShowPopup();
   };
 
+  const handleDelete = (id: number) => {
+    setProducts((prevList) => prevList.filter((product) => product.id !== id));
+  };
+
+  const handleEditStart = (product: Product) => {
+    setIsEditing(true);
+    setEditingProduct(product);
+    setFormData({
+      title: product.title,
+      price: product.price.toString(),
+      description: product.description,
+      categoryId: product.categoryId,
+      images: product.images[0],
+    });
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProduct) return;
+
+    setProducts((prevList) =>
+      prevList.map((product) =>
+        product.id === editingProduct.id
+          ? {
+              ...product,
+              title: formData.title,
+              price: parseFloat(formData.price),
+              description: formData.description,
+              categoryId: formData.categoryId,
+              images: [formData.images],
+            }
+          : product
+      )
+    );
+
+    setIsEditing(false);
+    setEditingProduct(null);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditingProduct(null);
+  };
+
   return (
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative pt-20">
+      {isEditing && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 p-4 rounded-lg shadow-lg relative">
+            <button
+              onClick={handleCancel}
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+            >
+              ✖
+            </button>
+            <ProductForm
+              formData={formData}
+              onInputChange={handleInputChange}
+              onSubmit={handleSave}
+              onCancel={handleCancel}
+            />
+          </div>
+        </div>
+      )}
       <Popup
         message="Item Berhasil ditambahkan ke keranjang !"
         isVisible={showPopup}
@@ -149,15 +232,13 @@ const ListPage: React.FC = () => {
 
       <div className="flex flex-wrap gap-x-[4%] gap-y-10 mt-12 justify-start">
         {products.length > 0
-          ? products.map((product: Product) => (
+          ? products.map((product) => (
               <ProductList
-                id={product.id}
                 key={product.id}
-                title={product.title}
-                images={product.images}
-                price={product.price}
-                description={product.description}
+                {...product}
                 onAddToCart={() => handleAddToCart(product)}
+                onDelete={() => handleDelete(product.id)}
+                onEdit={() => handleEditStart(product)}
               />
             ))
           : !loading && <p>No products found.</p>}

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useCallback } from "react";
 import ProductList from "@/components/ProductList";
+import ProductForm from "@/components/ProductForm";
 import { useCart } from "@/context/CartContext";
 import Popup from "./Popup";
 
@@ -10,6 +11,7 @@ interface Product {
   images: string[];
   price: number;
   description: string;
+  categoryId: string;
 }
 
 interface Props {
@@ -17,40 +19,37 @@ interface Props {
 }
 
 const ProductsWithPagination = ({ products }: Props) => {
+  const [productList, setProductList] = useState<Product[]>(products);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showPopup, setShowPopup] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    price: "",
+    description: "",
+    categoryId: "",
+    images: "",
+  });
+
   const productsPerPage = 8;
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-  const { addToCart } = useCart();
-
-  // Total pages calculation using Math.ceil for simplicity
-  const totalPages = Math.ceil(products.length / productsPerPage);
-
-  // Calculate the index of the first and last product on the current page
+  const totalPages = Math.ceil(productList.length / productsPerPage);
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-
-  // Get the current page's products
-  const currentProducts = products.slice(
+  const currentProducts = productList.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
 
-  // Handle Next and Previous buttons
+  const { addToCart } = useCart();
+
   const nextPage = useCallback(() => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   }, [currentPage, totalPages]);
 
   const prevPage = useCallback(() => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   }, [currentPage]);
-
-  if (!products || products.length === 0) {
-    return <p>No products available.</p>;
-  }
 
   const handleShowPopup = () => {
     setShowPopup(true);
@@ -68,15 +67,68 @@ const ProductsWithPagination = ({ products }: Props) => {
     handleShowPopup();
   };
 
+  const handleDelete = (id: number) => {
+    setProductList((prevList) =>
+      prevList.filter((product) => product.id !== id)
+    );
+  };
+
+  const handleEditStart = (product: Product) => {
+    setIsEditing(true);
+    setEditingProduct(product);
+    setFormData({
+      title: product.title,
+      price: product.price.toString(),
+      description: product.description,
+      categoryId: product.categoryId,
+      images: product.images[0],
+    });
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProduct) return;
+
+    setProductList((prevList) =>
+      prevList.map((product) =>
+        product.id === editingProduct.id
+          ? {
+              ...product,
+              title: formData.title,
+              price: parseFloat(formData.price),
+              description: formData.description,
+              categoryId: formData.categoryId,
+              images: [formData.images], // Bungkus string ke dalam array
+            }
+          : product
+      )
+    );
+
+    setIsEditing(false);
+    setEditingProduct(null);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditingProduct(null);
+  };
+
   return (
     <div>
       <Popup
-        message="Item Berhasil ditambahkan ke keranjang !"
+        message="Item Berhasil ditambahkan ke keranjang!"
         isVisible={showPopup}
         type="success"
         onClose={() => setShowPopup(false)}
       />
-      <div className="flex flex-wrap justify-between gap-10">
+      <div className="flex flex-wrap justify-between gap-10 w-[100%]">
         {currentProducts.map((product) => (
           <ProductList
             key={product.id}
@@ -86,6 +138,8 @@ const ProductsWithPagination = ({ products }: Props) => {
             price={product.price}
             description={product.description}
             onAddToCart={() => handleAddToCart(product)}
+            onDelete={handleDelete}
+            onEdit={() => handleEditStart(product)}
           />
         ))}
       </div>
@@ -112,6 +166,26 @@ const ProductsWithPagination = ({ products }: Props) => {
           Next
         </button>
       </div>
+
+      {/* Modal Popup */}
+      {isEditing && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 p-4 rounded-lg shadow-lg relative">
+            <button
+              onClick={handleCancel}
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+            >
+              ✖
+            </button>
+            <ProductForm
+              formData={formData}
+              onInputChange={handleInputChange}
+              onSubmit={handleSave}
+              onCancel={handleCancel}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

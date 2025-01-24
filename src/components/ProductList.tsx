@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useCart } from "@/context/CartContext";
+import { useUser } from "@/context/AuthContext";
 
 interface Product {
   id: number;
@@ -11,6 +12,8 @@ interface Product {
   description: string;
   images: string[];
   onAddToCart: () => void;
+  onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 const ProductList: React.FC<Product> = ({
@@ -20,13 +23,19 @@ const ProductList: React.FC<Product> = ({
   price,
   description,
   onAddToCart,
+  onEdit,
+  onDelete,
 }) => {
   const { handleImage } = useCart();
   const [imgSrc, setImgSrc] = useState(handleImage(images[0]));
+  const { user, isLoggedIn } = useUser();
 
   return (
     <div className="w-full flex flex-col gap-4 sm:w-[45%] lg:w-[22%] border rounded-2xl overflow-hidden">
-      <Link href={`/${id}`} className="relative w-full h-80 overflow-hidden ">
+      <Link
+        href={`/${id}`}
+        className="relative h-80 overflow-hidden min-w-[340px]"
+      >
         <Image
           src={imgSrc}
           onError={() =>
@@ -38,24 +47,46 @@ const ProductList: React.FC<Product> = ({
           }
           alt={title || "Product Image"}
           fill
-          sizes="25vw"
-          className="absolute object-cover z-10 hover:scale-110 transition-all duration-300 ease-in-out transform min-w-[25vw]"
+          className="absolute object-cover z-10 hover:scale-110 transition-all duration-300 ease-in-out transform w-full h-full"
         />
       </Link>
       <div className="flex justify-between px-4">
-        <span className="font-medium">{title.slice(0, 22)}...</span>
+        <span className="font-medium">
+          {title.length > 22 ? `${title.slice(0, 22)}...` : title}
+        </span>
         <span className="font-semibold">${price}</span>
       </div>
       <div className="text-sm text-gray-500 px-4">
-        {description.slice(0, 100)}...
+        {description.length > 100
+          ? `${description.slice(0, 100)}...`
+          : description}
       </div>
-      {/* Add to Cart button outside of the Link */}
-      <button
-        className="mx-4 mb-4 rounded-2xl ring-1 ring-[#F35C7A] text-[#F35C7A] w-max py-2 px-4 text-xs hover:bg-[#F35C7A] hover:text-white"
-        onClick={onAddToCart} // Call the add to cart handler on button click
-      >
-        Add to Cart
-      </button>
+      <div className="flex justify-between items-center px-4 mb-4">
+        <button
+          className="rounded-2xl ring-1 ring-[#F35C7A] text-[#F35C7A] py-2 px-4 text-xs hover:bg-[#F35C7A] hover:text-white"
+          onClick={onAddToCart}
+        >
+          Add to Cart
+        </button>
+        <div className="flex gap-2">
+          {isLoggedIn && user?.role === "admin" && (
+            <button
+              className="rounded-2xl ring-1 ring-blue-500 text-blue-500 py-2 px-4 text-xs hover:bg-blue-500 hover:text-white"
+              onClick={() => onEdit(id)}
+            >
+              Edit
+            </button>
+          )}
+          {isLoggedIn && user?.role === "admin" && (
+            <button
+              className="rounded-2xl ring-1 ring-red-500 text-red-500 py-2 px-4 text-xs hover:bg-red-500 hover:text-white"
+              onClick={() => onDelete(id)}
+            >
+              Delete
+            </button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
