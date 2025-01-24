@@ -1,6 +1,7 @@
+import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 interface Props {
   name: string;
@@ -8,6 +9,8 @@ interface Props {
 }
 
 const CategoryList: React.FC<Props> = ({ images, name }) => {
+  const { handleImage } = useCart();
+  const [imgSrc, setImgSrc] = useState(handleImage(images));
   return (
     <Link
       href="/list?cat=test"
@@ -15,8 +18,15 @@ const CategoryList: React.FC<Props> = ({ images, name }) => {
     >
       <div className="relative bg-slate-100 w-full h-96">
         <Image
-          src={images}
+          src={imgSrc}
           alt={name}
+          onError={() =>
+            setImgSrc(
+              handleImage(
+                "https://down-id.img.susercontent.com/file/4d172e17968ca4535120c09e1c0df06c"
+              )
+            )
+          }
           fill
           sizes="20vw"
           className="object-cover"
