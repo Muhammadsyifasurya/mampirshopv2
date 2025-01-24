@@ -12,27 +12,29 @@ interface Product {
   images: string[];
   price: number;
   description: string;
-  categoryId: string; // Keep consistent with the rest of your app
+  categoryId: number | null; // Keep consistent with the rest of your app
 }
+
 interface ProductData {
   title: string;
   price: number;
   description: string;
-  categoryId: number;
+  categoryId: number | null;
   images: string[];
 }
+
 const NewProducts = ({ products }: { products: Product[] }) => {
   const { addToCart } = useCart();
   const [productList, setProductList] = useState<Product[]>(products); // Renamed state to productList
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProductData>({
     title: "",
-    price: "",
+    price: 0,
     description: "",
-    categoryId: "", // Keep as string for form handling
-    images: "",
+    categoryId: null, // Keep as string for form handling
+    images: [],
   });
 
   const handleShowPopup = () => {
@@ -68,10 +70,10 @@ const NewProducts = ({ products }: { products: Product[] }) => {
     setEditingProduct(product);
     setFormData({
       title: product.title,
-      price: product.price.toString(),
+      price: product.price,
       description: product.description,
       categoryId: product.categoryId,
-      images: product.images[0],
+      images: product.images,
     });
   };
 
@@ -92,10 +94,10 @@ const NewProducts = ({ products }: { products: Product[] }) => {
           ? {
               ...product,
               title: formData.title,
-              price: parseFloat(formData.price),
+              price: formData.price,
               description: formData.description,
               categoryId: formData.categoryId,
-              images: [formData.images],
+              images: formData.images,
             }
           : product
       )
@@ -103,10 +105,10 @@ const NewProducts = ({ products }: { products: Product[] }) => {
 
     const updatedProduct: ProductData = {
       title: formData.title,
-      price: parseFloat(formData.price),
+      price: formData.price,
       description: formData.description,
-      categoryId: parseInt(formData.categoryId, 10),
-      images: [formData.images],
+      categoryId: formData.categoryId,
+      images: formData.images,
     };
 
     try {

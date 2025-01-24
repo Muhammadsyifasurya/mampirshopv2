@@ -1,14 +1,14 @@
 "use client";
 
-import Filter from "@/components/Filter";
-import ProductList from "@/components/ProductList";
-import Image from "next/image";
 import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { deleteData, getDataResponse, updateData } from "../service/api";
 import { useCart } from "@/context/CartContext";
 import Popup from "@/components/Popup";
+import ProductList from "@/components/ProductList";
 import ProductForm from "@/components/ProductForm";
+import Filter from "@/components/Filter";
+import Image from "next/image";
 
 interface Product {
   id: number;
@@ -16,14 +16,14 @@ interface Product {
   price: number;
   description: string;
   images: string[];
-  categoryId: number;
+  categoryId: number | null;
 }
 
 interface ProductData {
   title: string;
   price: number;
   description: string;
-  categoryId: number;
+  categoryId: number | null;
   images: string[];
 }
 
@@ -31,31 +31,30 @@ const ListPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const searchParams = useSearchParams();
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const { addToCart } = useCart();
   const [isEditing, setIsEditing] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProductData>({
     title: "",
-    price: "",
+    price: 0,
     description: "",
-    categoryId: "",
-    images: "",
+    categoryId: null,
+    images: [],
   });
 
-  useEffect(() => {
-    if (typeof window === "undefined") return; // Hindari penggunaan di SSR
-    const nameQuery = searchParams.get("name") || "";
-    const categoryId = searchParams.get("categoryId");
-    const minPrice = Number(searchParams.get("minPrice")) || 0;
-    const maxPrice = Number(searchParams.get("maxPrice")) || 10000;
+  const searchParams = useSearchParams();
+  const { addToCart } = useCart();
 
+  useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setProducts([]); // Clear konten saat loading dimulai
         setLoading(true);
         setError(null);
+        const nameQuery = searchParams.get("name") || "";
+        const categoryId = searchParams.get("categoryId");
+        const minPrice = Number(searchParams.get("minPrice")) || 0;
+        const maxPrice = Number(searchParams.get("maxPrice")) || 10000;
+
         const endpoint = `/products/?title=${nameQuery}${
           categoryId ? `&categoryId=${categoryId}` : ""
         }&price_min=${minPrice}&price_max=${maxPrice}`;
@@ -96,7 +95,6 @@ const ListPage: React.FC = () => {
         prevList.filter((product) => product.id !== id)
       );
       await deleteData(`/products/${id}`);
-      console.log("Product deleted successfully!");
     } catch (error) {
       console.error("Error deleting product:", error);
     }
@@ -107,10 +105,10 @@ const ListPage: React.FC = () => {
     setEditingProduct(product);
     setFormData({
       title: product.title,
-      price: product.price.toString(),
+      price: product.price,
       description: product.description,
-      categoryId: product.categoryId.toString(),
-      images: product.images[0],
+      categoryId: product.categoryId,
+      images: product.images,
     });
   };
 
@@ -125,32 +123,23 @@ const ListPage: React.FC = () => {
     e.preventDefault();
     if (!editingProduct) return;
 
-    setProducts((prevList) =>
-      prevList.map((product) =>
-        product.id === editingProduct.id
-          ? {
-              ...product,
-              title: formData.title,
-              price: parseFloat(formData.price),
-              description: formData.description,
-              categoryId: parseInt(formData.categoryId, 10), // Convert back to number
-              images: [formData.images],
-            }
-          : product
-      )
-    );
-
     const updatedProduct: ProductData = {
       title: formData.title,
-      price: parseFloat(formData.price),
+      price: formData.price,
       description: formData.description,
-      categoryId: parseInt(formData.categoryId, 10),
-      images: [formData.images],
+      categoryId: formData.categoryId,
+      images: formData.images,
     };
 
     try {
       await updateData(`/products/${editingProduct.id}`, updatedProduct);
-      console.log("Product updated successfully!");
+      setProducts((prevList) =>
+        prevList.map((product) =>
+          product.id === editingProduct.id
+            ? { ...product, ...updatedProduct }
+            : product
+        )
+      );
     } catch (error) {
       console.error("Error updating product:", error);
     }
@@ -185,7 +174,7 @@ const ListPage: React.FC = () => {
         </div>
       )}
       <Popup
-        message="Item Berhasil ditambahkan ke keranjang !"
+        message="Item Berhasil ditambahkan ke keranjang!"
         isVisible={showPopup}
         type="success"
         onClose={() => setShowPopup(false)}
@@ -213,7 +202,7 @@ const ListPage: React.FC = () => {
       <Filter />
       <h1 className="mt-12 text-xl font-semibold">All For You!</h1>
 
-      {loading && (
+      {loading ? (
         <div className="flex justify-center items-center min-h-screen">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce"></div>
@@ -224,11 +213,10 @@ const ListPage: React.FC = () => {
             Memuat konten...
           </p>
         </div>
-      )}
-      {error && (
+      ) : error ? (
         <>
           <Popup
-            message="Gagal memuat produk. Coba lagi nanti. !"
+            message="Gagal memuat produk. Coba lagi nanti!"
             type="error"
             isVisible={true}
             onClose={() => setShowPopup(false)}
@@ -259,11 +247,10 @@ const ListPage: React.FC = () => {
             </div>
           </div>
         </>
-      )}
-
-      <div className="flex flex-wrap gap-x-[4%] gap-y-10 mt-12 justify-start">
-        {products.length > 0
-          ? products.map((product) => (
+      ) : (
+        <div className="flex flex-wrap gap-x-[4%] gap-y-10 mt-12 justify-start">
+          {products.length > 0 ? (
+            products.map((product) => (
               <ProductList
                 key={product.id}
                 {...product}
@@ -272,8 +259,11 @@ const ListPage: React.FC = () => {
                 onEdit={() => handleEditStart(product)}
               />
             ))
-          : !loading && <p>No products found.</p>}
-      </div>
+          ) : (
+            <p>No products found.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

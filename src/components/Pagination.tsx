@@ -11,7 +11,7 @@ interface ProductData {
   title: string;
   price: number;
   description: string;
-  categoryId: number;
+  categoryId: number | null;
   images: string[];
 }
 
@@ -21,7 +21,7 @@ interface Product {
   images: string[];
   price: number;
   description: string;
-  categoryId: string;
+  categoryId: number | null;
 }
 
 interface Props {
@@ -33,12 +33,12 @@ const Pagination = ({ products }: Props) => {
   const [showPopup, setShowPopup] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProductData>({
     title: "",
-    price: "",
+    price: 0,
     description: "",
-    categoryId: "",
-    images: "",
+    categoryId: null,
+    images: [],
   });
 
   // Gunakan custom hook untuk pagination
@@ -85,10 +85,10 @@ const Pagination = ({ products }: Props) => {
     setEditingProduct(product);
     setFormData({
       title: product.title,
-      price: product.price.toString(),
+      price: product.price,
       description: product.description,
       categoryId: product.categoryId,
-      images: product.images[0],
+      images: product.images,
     });
   };
 
@@ -109,20 +109,21 @@ const Pagination = ({ products }: Props) => {
           ? {
               ...product,
               title: formData.title,
-              price: parseFloat(formData.price),
+              price: formData.price,
               description: formData.description,
               categoryId: formData.categoryId,
-              images: [formData.images],
+              images: formData.images,
             }
           : product
       )
     );
+
     const updatedProduct: ProductData = {
       title: formData.title,
-      price: parseFloat(formData.price),
+      price: formData.price,
       description: formData.description,
-      categoryId: parseInt(formData.categoryId, 10),
-      images: [formData.images],
+      categoryId: formData.categoryId,
+      images: formData.images,
     };
 
     try {

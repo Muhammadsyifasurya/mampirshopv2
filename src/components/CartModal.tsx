@@ -57,7 +57,7 @@ const CartModal = ({ closeModal }: { closeModal: () => void }) => {
                         {item.title.slice(0, 15)}...
                       </h3>
                       <div className="p-1 bg-gray-50 rounded-sm">
-                        ${item.price}
+                        ${item.price.toLocaleString()}
                       </div>
                     </div>
                     {/* DESC */}
@@ -97,7 +97,7 @@ const CartModal = ({ closeModal }: { closeModal: () => void }) => {
           <div className="">
             <div className="flex items-center justify-between font-semibold">
               <span className="">SubTotal</span>
-              <span className="">${calculateTotal()}</span>
+              <span className="">${calculateTotal().toLocaleString()}</span>
             </div>
             <p className="text-gray-500 text-sm mt-2 mb-4">
               Shipping and taxes calculated at checkout.

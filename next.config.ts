@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "example.com",
+      },
+      {
+        protocol: "https",
+        hostname: "opengraph.githubassets.com",
+      },
+      {
+        protocol: "https",
         hostname: "imgur.com",
       },
       {
@@ -75,6 +83,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "encrypted-tbn0.gstatic.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i0.wp.com",
       },
       {
         protocol: "https",

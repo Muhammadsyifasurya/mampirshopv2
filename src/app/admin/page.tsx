@@ -10,10 +10,10 @@ const AdminDashboard = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
-    price: "",
+    price: 0,
     description: "",
-    categoryId: "",
-    images: "",
+    categoryId: null,
+    images: [],
   });
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
           title: formData.title,
           price: Number(formData.price),
           description: formData.description,
-          categoryId: Number(formData.categoryId),
+          categoryId: formData.categoryId,
           images: [formData.images],
         }),
       });
@@ -58,10 +58,10 @@ const AdminDashboard = () => {
         alert("Product added successfully!");
         setFormData({
           title: "",
-          price: "",
+          price: 0,
           description: "",
-          categoryId: "",
-          images: "",
+          categoryId: null,
+          images: [],
         });
         setIsPopupVisible(false);
       } else {

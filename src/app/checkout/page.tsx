@@ -134,10 +134,10 @@ const CheckoutPage = () => {
                 {product.quantity}
               </td>
               <td className="py-4 text-gray-700 dark:text-gray-300">
-                ${product.price.toFixed(2)}
+                ${product.price.toLocaleString()}
               </td>
               <td className="py-4 text-gray-700 dark:text-gray-300">
-                ${(product.price * product.quantity).toFixed(2)}
+                ${(product.price * product.quantity).toLocaleString()}
               </td>
             </tr>
           ))}
@@ -147,11 +147,7 @@ const CheckoutPage = () => {
       {/* Subtotal and Discount */}
       <div className="flex justify-between mb-8 text-gray-700 dark:text-gray-300">
         <span className="font-medium">Subtotal:</span>
-        <span>
-          $
-          {invoiceDetails.totalAmount +
-            invoiceDetails.totalAmount * discountAmount}
-        </span>
+        <span>${calculateTotal()}</span>
       </div>
 
       {/* Discount Section */}
@@ -172,7 +168,7 @@ const CheckoutPage = () => {
           <div className="flex justify-between items-center text-gray-700 dark:text-gray-300">
             <span className="font-medium">Total Discount:</span>
             <span className="text-red-500 dark:text-red-400 font-semibold">
-              -${(invoiceDetails.totalAmount * discountAmount).toFixed(2)}
+              -${(calculateTotal() * discountAmount).toLocaleString()}
             </span>
           </div>
         </div>

@@ -2,7 +2,7 @@ interface ProductData {
   title: string;
   price: number;
   description: string;
-  categoryId: number;
+  categoryId: number | null;
   images: string[];
 }
 

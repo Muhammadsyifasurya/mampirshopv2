@@ -56,7 +56,7 @@ const ViewCartPage = () => {
                         {item.title}
                       </h3>
                       <div className="text-xl text-gray-500 dark:text-gray-400">
-                        ${item.price}
+                        ${item.price.toLocaleString()}
                       </div>
                     </div>
                     <div className="text-sm text-gray-400 dark:text-gray-500">
@@ -122,7 +122,7 @@ const ViewCartPage = () => {
                   Subtotal
                 </span>
                 <span className="text-gray-800 text-3xl dark:text-gray-100">
-                  ${calculateTotal()}
+                  ${calculateTotal().toLocaleString()}
                 </span>
               </div>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 mb-6">

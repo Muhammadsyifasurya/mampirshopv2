@@ -5,10 +5,10 @@ import React from "react";
 interface ProductFormProps {
   formData: {
     title: string;
-    price: string;
+    price: number;
     description: string;
-    categoryId: string;
-    images: string;
+    categoryId: number | null;
+    images: string[];
   };
   onInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -64,7 +64,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
           <input
             type="number"
             name="categoryId"
-            value={formData.categoryId}
+            value={formData.categoryId ? formData.categoryId : ''}
             onChange={onInputChange}
             className="w-full p-2 rounded-lg bg-gray-700 text-white"
             required
