@@ -62,7 +62,7 @@ const UserProfile: React.FC = () => {
                     Date: {new Date(order.date).toLocaleDateString()}
                   </p>
                 </div>
-                <div>Total: ${order.totalAmount.toFixed(2)}</div>
+                <div>Total: ${order.totalAmount.toLocaleString()}</div>
                 <span
                   className={`px-4 py-2 text-xs font-semibold rounded-full ${
                     order.status === "Completed"
