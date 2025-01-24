@@ -12,6 +12,7 @@ interface Props {
 const CategoryList: React.FC<Props> = ({ images, name }) => {
   const { handleImage } = useCart();
   const [imgSrc, setImgSrc] = useState(handleImage(images));
+
   return (
     <Link
       href="/list?cat=test"

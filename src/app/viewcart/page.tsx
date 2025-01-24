@@ -1,252 +1,153 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useCart } from "@/context/CartContext";
-import { useUser } from "@/context/AuthContext";
+import React, { useState } from "react";
 import Image from "next/image";
+import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 
-interface CartItem {
-  id: number;
-  title: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
-
-interface InvoiceDetails {
-  items: CartItem[];
-  totalAmount: number;
-  shippingAddress: string;
-  paymentMethod: string;
-}
-
-const CheckoutPage = () => {
+const ViewCartPage = () => {
   const {
     cartItems,
-    calculateTotal,
     discountCode,
     discountAmount,
-    addOrder,
-    setCartItems,
+    applyDiscount,
+    removeFromCart,
+    increaseQuantity,
+    decreaseQuantity,
+    calculateTotal,
+    handleImage,
   } = useCart();
-  const [invoiceDetails, setInvoiceDetails] = useState<InvoiceDetails | null>(
-    null
-  );
-  const { user } = useUser();
-  const [isPaymentCompleted, setIsPaymentCompleted] = useState(false);
 
-  useEffect(() => {
-    if (cartItems.length > 0) {
-      const total = calculateTotal();
-      setInvoiceDetails({
-        items: cartItems,
-        totalAmount: total,
-        shippingAddress: "Jl. Contoh Alamat, Yogyakarta",
-        paymentMethod: "Credit Card",
-      });
-    } else {
-      setInvoiceDetails(null);
-    }
-  }, [cartItems, calculateTotal]);
+  const [inputDiscountCode, setInputDiscountCode] = useState("");
 
-  const handlePayment = () => {
-    const newOrder = {
-      id: `INV${Date.now()}`, // unique ID
-      items: cartItems,
-      totalAmount: calculateTotal(),
-      date: new Date().toISOString(),
-      status: "Completed",
-    };
-
-    addOrder(newOrder); // Tambahkan pesanan baru
-    setIsPaymentCompleted(true); // Tandai bahwa pembayaran telah selesai
-    setCartItems([]); // Kosongkan keranjang
+  const handleDiscountApply = () => {
+    // Contoh kode diskon
+    applyDiscount(inputDiscountCode);
   };
 
   return (
-    <>
-      {isPaymentCompleted ? (
-        <div className="flex items-center justify-center">
-          <div className="mt-40 flex bg-gray-800 p-20 rounded-[60px] flex-col items-center justify-center text-center">
-            <div className="bg-green-100 p-6 rounded-full">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="green"
-                className="w-16 h-16"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <h1 className="mt-6 text-3xl font-bold text-gray-800 dark:text-white">
-              Terima Kasih!
-            </h1>
-            <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
-              Pembayaran Anda telah berhasil diproses.
-            </p>
-            <Link href="/">
-              <button className="mt-6 px-6 py-3 text-white bg-green-600 hover:bg-green-500 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300">
-                Kembali ke Beranda
-              </button>
-            </Link>
+    <div className="mt-24 min-h-screen py-8">
+      <div className="max-w-6xl mx-auto px-14 py-11 bg-white dark:bg-gray-800 shadow-lg rounded-[40px]">
+        {!cartItems || cartItems.length === 0 ? (
+          <div className="text-center text-2xl font-semibold text-gray-700 dark:text-gray-300">
+            Your cart is empty.
           </div>
-        </div>
-      ) : (
-        <div className="bg-white mt-28 dark:bg-gray-800 rounded-3xl shadow-lg px-8 py-10 max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center">
-              <Image
-                className="h-12 w-12 mr-3"
-                src="/MampirShop.webp"
-                alt="Logo"
-                width={48}
-                height={48}
-              />
-              <div className="text-gray-700 dark:text-gray-200 font-bold text-3xl">
-                MampirShop
-              </div>
-            </div>
-            <div className="text-gray-600 dark:text-gray-400 text-right">
-              <div className="font-semibold text-xl mb-2">INVOICE</div>
-              <div className="text-sm">
-                Date: {new Date().toLocaleDateString()}
-              </div>
-              <div className="text-sm">
-                Invoice #: INV{Math.floor(Math.random() * 100000)}
-              </div>
-            </div>
-          </div>
-
-          {/* Billing Address */}
-          <div className="border-b-2 border-gray-300 dark:border-gray-600 pb-8 mb-8">
-            <h2 className="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-              Bill To:
+        ) : (
+          <>
+            <h2 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+              Shopping Cart
             </h2>
-            <div className="text-gray-700 dark:text-gray-300 mb-2">
-              {user?.name}
-            </div>
-            <div className="text-gray-700 dark:text-gray-300 mb-2">
-              Jl. Parangtritis KM 20, Yogyakarta
-            </div>
-            <div className="text-gray-700 dark:text-gray-300 mb-2">
-              {user?.email}
-            </div>
-          </div>
-
-          {/* Items Table */}
-          <table className="w-full text-left mb-8">
-            <thead>
-              <tr>
-                <th className="text-gray-700 dark:text-gray-300 font-semibold uppercase py-3">
-                  Description
-                </th>
-                <th className="text-gray-700 dark:text-gray-300 font-semibold uppercase py-3">
-                  Quantity
-                </th>
-                <th className="text-gray-700 dark:text-gray-300 font-semibold uppercase py-3">
-                  Price
-                </th>
-                <th className="text-gray-700 dark:text-gray-300 font-semibold uppercase py-3">
-                  Total
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {invoiceDetails?.items.map((product: CartItem) => (
-                <tr
-                  key={product.id}
-                  className="border-b border-gray-200 dark:border-gray-600"
+            {/* Cart Items */}
+            <div className="space-y-6">
+              {cartItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center gap-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg shadow-sm"
                 >
-                  <td className="py-4 text-gray-700 dark:text-gray-300">
-                    {product.title}
-                  </td>
-                  <td className="py-4 text-gray-700 dark:text-gray-300">
-                    {product.quantity}
-                  </td>
-                  <td className="py-4 text-gray-700 dark:text-gray-300">
-                    ${product.price.toLocaleString()}
-                  </td>
-                  <td className="py-4 text-gray-700 dark:text-gray-300">
-                    ${(product.price * product.quantity).toLocaleString()}
-                  </td>
-                </tr>
+                  <Image
+                    src={handleImage(item.image)}
+                    alt={item.title}
+                    width={80}
+                    height={100}
+                    className="object-cover rounded-md"
+                  />
+                  <div className="flex flex-col w-full">
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-semibold text-gray-700 dark:text-gray-200">
+                        {item.title}
+                      </h3>
+                      <div className="text-xl text-gray-500 dark:text-gray-400">
+                        ${item.price.toLocaleString()}
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-400 dark:text-gray-500">
+                      Available
+                    </div>
+
+                    <div className="flex justify-between items-center mt-4">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => decreaseQuantity(item.id)}
+                          className="px-3 py-1 bg-indigo-100 dark:bg-indigo-700 text-indigo-600 dark:text-indigo-300 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition"
+                        >
+                          -
+                        </button>
+                        <span className="text-gray-600 dark:text-gray-300">
+                          Qty. {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => increaseQuantity(item.id)}
+                          className="px-3 py-1 bg-indigo-100 dark:bg-indigo-700 text-indigo-600 dark:text-indigo-300 rounded-md hover:bg-indigo-200 dark:hover:bg-indigo-600 transition"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <span
+                        className="text-red-500 cursor-pointer hover:underline dark:text-red-400"
+                        onClick={() => removeFromCart(item.id)}
+                      >
+                        Remove
+                      </span>
+                    </div>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
-
-          {/* Subtotal and Discount */}
-          <div className="flex justify-between mb-8 text-gray-700 dark:text-gray-300">
-            <span className="font-medium">Subtotal:</span>
-            <span>${calculateTotal()}</span>
-          </div>
-
-          {/* Discount Section */}
-          <div className="text-right mb-8">
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center text-gray-700 dark:text-gray-300">
-                <span className="font-medium">Use code:</span>
-                <span className="text-blue-500 dark:text-blue-400 font-semibold">
-                  {discountCode}
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-gray-700 dark:text-gray-300">
-                <span className="font-medium">Discount:</span>
-                <span className="text-green-500 dark:text-green-400 font-semibold">
-                  {(discountAmount * 100).toFixed(0)}%
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-gray-700 dark:text-gray-300">
-                <span className="font-medium">Total Discount:</span>
-                <span className="text-red-500 dark:text-red-400 font-semibold">
-                  -${(calculateTotal() * discountAmount).toLocaleString()}
-                </span>
-              </div>
             </div>
-          </div>
 
-          {/* Final Total */}
-          <div className="flex justify-between mb-8 text-gray-700 dark:text-gray-200 font-bold text-xl">
-            <span>Total:</span>
-            <span>${calculateTotal()}</span>
-          </div>
-
-          {/* Footer */}
-          <div className="flex justify-between border-t-2 border-gray-300 dark:border-gray-600 pt-8">
-            <div>
-              <div className="text-gray-700 dark:text-gray-300 mb-2">
-                Thank you for your business!
-              </div>
-              <div className="text-gray-700 dark:text-gray-300 mb-2">
-                Payment is due within 30 days. Late payments are subject to
-                fees.
-              </div>
-              <div className="text-gray-700 dark:text-gray-300 mb-2">
-                Payment Method: {invoiceDetails?.paymentMethod || 0}
-              </div>
-              <div className="text-blue-700 dark:text-blue-400 underline">
-                syifamuhammad3139@gmail.com
-              </div>
-            </div>
-            {cartItems.length > 0 && (
+            {/* Discount Code */}
+            <div className="mt-6 flex items-center gap-4">
+              <input
+                type="text"
+                value={inputDiscountCode}
+                onChange={(e) => setInputDiscountCode(e.target.value)}
+                className="p-3 border border-gray-300 dark:border-gray-600 rounded-md w-full bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                placeholder="Enter Discount Code"
+              />
               <button
-                onClick={handlePayment}
-                className="w-32 mt-16 py-3 text-white bg-gray-800 hover:bg-gray-700 rounded-full shadow-lg transform hover:scale-110 transition-all duration-300 dark:bg-gray-900 dark:hover:bg-gray-800"
+                onClick={handleDiscountApply}
+                className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition dark:bg-indigo-500 dark:hover:bg-indigo-600"
               >
-                Pay Now
+                Apply
               </button>
+            </div>
+            {discountCode && (
+              <div className="mt-2 text-green-500 font-semibold dark:text-green-300">
+                Discount applied: {discountAmount * 100}% off!
+              </div>
             )}
-          </div>
-        </div>
-      )}
-    </>
+
+            {/* Bottom Section */}
+            <div className="mt-6">
+              <div className="flex justify-between font-semibold text-lg">
+                <span className="text-gray-800 text-3xl dark:text-gray-100">
+                  Subtotal
+                </span>
+                <span className="text-gray-800 text-3xl dark:text-gray-100">
+                  ${calculateTotal().toLocaleString()}
+                </span>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 mb-6">
+                Shipping and taxes calculated at checkout.
+              </p>
+
+              {/* Actions */}
+              <div className="flex justify-between">
+                <Link href="/checkout">
+                  <button className="px-6 py-3 text-white rounded-3xl shadow-md hover:bg-gray-800 transition dark:bg-gray-900 dark:hover:bg-gray-700">
+                    Checkout
+                  </button>
+                </Link>
+                <Link href="/">
+                  <button className="px-6 py-3 bg-gray-400 text-gray-800 rounded-3xl hover:bg-gray-300 transition dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
+                    Continue Shopping
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 };
 
-export default CheckoutPage;
+export default ViewCartPage;
