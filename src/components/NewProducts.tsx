@@ -4,6 +4,7 @@ import { useCart } from "@/context/CartContext";
 import Popup from "./Popup";
 import { useState } from "react";
 import ProductForm from "./ProductForm";
+import { deleteData, updateData } from "@/app/service/api";
 
 interface Product {
   id: number;
@@ -13,7 +14,13 @@ interface Product {
   description: string;
   categoryId: string; // Keep consistent with the rest of your app
 }
-
+interface ProductData {
+  title: string;
+  price: number;
+  description: string;
+  categoryId: number;
+  images: string[];
+}
 const NewProducts = ({ products }: { products: Product[] }) => {
   const { addToCart } = useCart();
   const [productList, setProductList] = useState<Product[]>(products); // Renamed state to productList
@@ -44,10 +51,16 @@ const NewProducts = ({ products }: { products: Product[] }) => {
     handleShowPopup();
   };
 
-  const handleDelete = (id: number) => {
-    setProductList((prevList) =>
-      prevList.filter((product) => product.id !== id)
-    ); // Updated to productList
+  const handleDelete = async (id: number) => {
+    try {
+      setProductList((prevList) =>
+        prevList.filter((product) => product.id !== id)
+      );
+      await deleteData(`/products/${id}`);
+      console.log("Product deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   const handleEditStart = (product: Product) => {
@@ -69,7 +82,7 @@ const NewProducts = ({ products }: { products: Product[] }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProduct) return;
 
@@ -87,6 +100,21 @@ const NewProducts = ({ products }: { products: Product[] }) => {
           : product
       )
     );
+
+    const updatedProduct: ProductData = {
+      title: formData.title,
+      price: parseFloat(formData.price),
+      description: formData.description,
+      categoryId: parseInt(formData.categoryId, 10),
+      images: [formData.images],
+    };
+
+    try {
+      await updateData(`/products/${editingProduct.id}`, updatedProduct);
+      console.log("Product updated successfully!");
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
 
     setIsEditing(false);
     setEditingProduct(null);

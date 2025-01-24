@@ -5,7 +5,7 @@ import ProductList from "@/components/ProductList";
 import Image from "next/image";
 import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { getDataResponse } from "../service/api";
+import { deleteData, getDataResponse, updateData } from "../service/api";
 import { useCart } from "@/context/CartContext";
 import Popup from "@/components/Popup";
 import ProductForm from "@/components/ProductForm";
@@ -17,6 +17,14 @@ interface Product {
   description: string;
   images: string[];
   categoryId: number;
+}
+
+interface ProductData {
+  title: string;
+  price: number;
+  description: string;
+  categoryId: number;
+  images: string[];
 }
 
 const ListPage: React.FC = () => {
@@ -82,8 +90,16 @@ const ListPage: React.FC = () => {
     handleShowPopup();
   };
 
-  const handleDelete = (id: number) => {
-    setProducts((prevList) => prevList.filter((product) => product.id !== id));
+  const handleDelete = async (id: number) => {
+    try {
+      setProducts((prevList) =>
+        prevList.filter((product) => product.id !== id)
+      );
+      await deleteData(`/products/${id}`);
+      console.log("Product deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   const handleEditStart = (product: Product) => {
@@ -105,7 +121,7 @@ const ListPage: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProduct) return;
 
@@ -123,6 +139,21 @@ const ListPage: React.FC = () => {
           : product
       )
     );
+
+    const updatedProduct: ProductData = {
+      title: formData.title,
+      price: parseFloat(formData.price),
+      description: formData.description,
+      categoryId: parseInt(formData.categoryId, 10),
+      images: [formData.images],
+    };
+
+    try {
+      await updateData(`/products/${editingProduct.id}`, updatedProduct);
+      console.log("Product updated successfully!");
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
 
     setIsEditing(false);
     setEditingProduct(null);
