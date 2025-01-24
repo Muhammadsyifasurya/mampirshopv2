@@ -98,11 +98,19 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "akmedicalhall.com",
+      },
+      {
+        protocol: "https",
         hostname: "www.iconpacks.net",
       },
       {
         protocol: "https",
         hostname: "via.placeholder.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.thesprucepets.com",
       },
       {
         protocol: "https",

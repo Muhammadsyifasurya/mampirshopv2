@@ -4,6 +4,15 @@ import ProductList from "@/components/ProductList";
 import ProductForm from "@/components/ProductForm";
 import { useCart } from "@/context/CartContext";
 import Popup from "./Popup";
+import { deleteData, updateData } from "@/app/service/api";
+
+interface ProductData {
+  title: string;
+  price: number;
+  description: string;
+  categoryId: number;
+  images: string[];
+}
 
 interface Product {
   id: number;
@@ -67,10 +76,16 @@ const Pagination = ({ products }: Props) => {
     handleShowPopup();
   };
 
-  const handleDelete = (id: number) => {
-    setProductList((prevList) =>
-      prevList.filter((product) => product.id !== id)
-    );
+  const handleDelete = async (id: number) => {
+    try {
+      setProductList((prevList) =>
+        prevList.filter((product) => product.id !== id)
+      );
+      await deleteData(`/products/${id}`);
+      console.log("Product deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   const handleEditStart = (product: Product) => {
@@ -92,7 +107,7 @@ const Pagination = ({ products }: Props) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProduct) return;
 
@@ -110,7 +125,20 @@ const Pagination = ({ products }: Props) => {
           : product
       )
     );
+    const updatedProduct: ProductData = {
+      title: formData.title,
+      price: parseFloat(formData.price),
+      description: formData.description,
+      categoryId: parseInt(formData.categoryId, 10),
+      images: [formData.images],
+    };
 
+    try {
+      await updateData(`/products/${editingProduct.id}`, updatedProduct);
+      console.log("Product updated successfully!");
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
     setIsEditing(false);
     setEditingProduct(null);
   };
