@@ -111,6 +111,31 @@ const NewProducts = ({ products }: { products: Product[] }) => {
     setEditingProduct(null);
   };
 
+  // Fungsi untuk menambah URL gambar
+  const handleAddImage = () => {
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ""],
+    }));
+  };
+
+  // Fungsi untuk mengedit URL gambar tertentu
+  const handleImageChange = (index: number, value: string) => {
+    setFormData((prev) => {
+      const newImages = [...prev.images];
+      newImages[index] = value;
+      return { ...prev, images: newImages };
+    });
+  };
+
+  // Fungsi untuk menghapus URL gambar tertentu
+  const handleRemoveImage = (index: number) => {
+    setFormData((prev) => {
+      const newImages = prev.images.filter((_, i) => i !== index);
+      return { ...prev, images: newImages };
+    });
+  };
+
   return (
     <div className="mt-24 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64">
       {/* Popup for Add to Cart */}
@@ -131,6 +156,9 @@ const NewProducts = ({ products }: { products: Product[] }) => {
               ✖
             </button>
             <ProductForm
+              onAddImage={handleAddImage}
+              onImageChange={handleImageChange}
+              onRemoveImage={handleRemoveImage}
               formData={formData}
               onInputChange={handleInputChange}
               onSubmit={handleSave}

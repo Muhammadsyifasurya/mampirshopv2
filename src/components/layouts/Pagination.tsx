@@ -126,6 +126,31 @@ const Pagination = ({ products }: Props) => {
     setEditingProduct(null);
   };
 
+  // Fungsi untuk menambah URL gambar
+  const handleAddImage = () => {
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ""],
+    }));
+  };
+
+  // Fungsi untuk mengedit URL gambar tertentu
+  const handleImageChange = (index: number, value: string) => {
+    setFormData((prev) => {
+      const newImages = [...prev.images];
+      newImages[index] = value;
+      return { ...prev, images: newImages };
+    });
+  };
+
+  // Fungsi untuk menghapus URL gambar tertentu
+  const handleRemoveImage = (index: number) => {
+    setFormData((prev) => {
+      const newImages = prev.images.filter((_, i) => i !== index);
+      return { ...prev, images: newImages };
+    });
+  };
+
   return (
     <div>
       <Popup
@@ -183,6 +208,9 @@ const Pagination = ({ products }: Props) => {
               ✖
             </button>
             <ProductForm
+              onAddImage={handleAddImage}
+              onImageChange={handleImageChange}
+              onRemoveImage={handleRemoveImage}
               formData={formData}
               onInputChange={handleInputChange}
               onSubmit={handleSave}
