@@ -81,7 +81,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         </div>
         {/* Dynamic Image URL Inputs */}
         <div className="mb-4">
-          <label className="block text-sm mb-2">Image URLs</label>
+          <label className="block text-sm mb-2">Image URLs (Max : 3)</label>
           {formData.images.map((image, index) => (
             <div key={index} className="flex items-center mb-2">
               <input
@@ -105,6 +105,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
             type="button"
             onClick={onAddImage}
             className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg mt-2"
+            disabled={formData.images.length >= 3}
           >
             + Add Image
           </button>
