@@ -13,8 +13,33 @@ const AdminDashboard = () => {
     price: 0,
     description: "",
     categoryId: null,
-    images: [],
+    images: [""],
   });
+
+  // Fungsi untuk menambah URL gambar
+  const handleAddImage = () => {
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ""],
+    }));
+  };
+
+  // Fungsi untuk mengedit URL gambar tertentu
+  const handleImageChange = (index: number, value: string) => {
+    setFormData((prev) => {
+      const newImages = [...prev.images];
+      newImages[index] = value;
+      return { ...prev, images: newImages };
+    });
+  };
+
+  // Fungsi untuk menghapus URL gambar tertentu
+  const handleRemoveImage = (index: number) => {
+    setFormData((prev) => {
+      const newImages = prev.images.filter((_, i) => i !== index);
+      return { ...prev, images: newImages };
+    });
+  };
 
   useEffect(() => {
     const user = Cookies.get("user");
@@ -50,7 +75,7 @@ const AdminDashboard = () => {
           price: Number(formData.price),
           description: formData.description,
           categoryId: formData.categoryId,
-          images: [formData.images],
+          images: formData.images,
         }),
       });
 
@@ -61,7 +86,7 @@ const AdminDashboard = () => {
           price: 0,
           description: "",
           categoryId: null,
-          images: [],
+          images: [""],
         });
         setIsPopupVisible(false);
       } else {
@@ -114,6 +139,9 @@ const AdminDashboard = () => {
             onInputChange={handleInputChange}
             onSubmit={handleSubmit}
             onCancel={() => setIsPopupVisible(false)}
+            onAddImage={handleAddImage}
+            onImageChange={handleImageChange}
+            onRemoveImage={handleRemoveImage}
           />
         </div>
       )}

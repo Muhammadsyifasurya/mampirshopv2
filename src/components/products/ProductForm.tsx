@@ -13,6 +13,9 @@ interface ProductFormProps {
   onInputChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
+  onImageChange: (index: number, value: string) => void;
+  onAddImage: () => void;
+  onRemoveImage: (index: number) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
 }
@@ -20,6 +23,9 @@ interface ProductFormProps {
 const ProductForm: React.FC<ProductFormProps> = ({
   formData,
   onInputChange,
+  onImageChange,
+  onAddImage,
+  onRemoveImage,
   onSubmit,
   onCancel,
 }) => {
@@ -34,6 +40,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
             name="title"
             value={formData.title}
             onChange={onInputChange}
+            placeholder="Enter title"
             className="w-full p-2 rounded-lg bg-gray-700 text-white"
             required
           />
@@ -53,6 +60,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
           <label className="block text-sm mb-2">Description</label>
           <textarea
             name="description"
+            placeholder="Enter description"
             value={formData.description}
             onChange={onInputChange}
             className="w-full p-2 rounded-lg bg-gray-700 text-white"
@@ -63,23 +71,43 @@ const ProductForm: React.FC<ProductFormProps> = ({
           <label className="block text-sm mb-2">Category ID</label>
           <input
             type="number"
+            placeholder="Enter category ID"
             name="categoryId"
-            value={formData.categoryId ? formData.categoryId : ''}
+            value={formData.categoryId ? formData.categoryId : ""}
             onChange={onInputChange}
             className="w-full p-2 rounded-lg bg-gray-700 text-white"
             required
           />
         </div>
+        {/* Dynamic Image URL Inputs */}
         <div className="mb-4">
-          <label className="block text-sm mb-2">Image URL</label>
-          <input
-            type="text"
-            name="images"
-            value={formData.images}
-            onChange={onInputChange}
-            className="w-full p-2 rounded-lg bg-gray-700 text-white"
-            required
-          />
+          <label className="block text-sm mb-2">Image URLs</label>
+          {formData.images.map((image, index) => (
+            <div key={index} className="flex items-center mb-2">
+              <input
+                type="text"
+                value={image}
+                placeholder="Enter image URL"
+                onChange={(e) => onImageChange(index, e.target.value)}
+                className="w-full p-2 rounded-lg bg-gray-700 text-white"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => onRemoveImage(index)}
+                className="ml-2 bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded-lg"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={onAddImage}
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg mt-2"
+          >
+            + Add Image
+          </button>
         </div>
         <div className="flex justify-end">
           <button

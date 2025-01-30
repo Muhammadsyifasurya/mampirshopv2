@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "www.google.com",
+      },
+      {
+        protocol: "https",
+        hostname: "occ-0-8407-1723.1.nflxso.net",
+      },
+      {
+        protocol: "https",
         hostname: "example.com",
       },
       {
