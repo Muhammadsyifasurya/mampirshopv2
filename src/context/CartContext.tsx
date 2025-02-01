@@ -71,18 +71,17 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     });
   }, [cartItems, orderHistory]);
 
+  const DISCOUNT_CODES: Record<string, number> = {
+    DISCOUNT10: 0.1,
+    DISCOUNT20: 0.2,
+  };
+
   const applyDiscount = (code: string) => {
-    if (code === "DISCOUNT10") {
-      setDiscountAmount(0.1); // 10% discount
-      setDiscountCode(code);
-    } else if (code === "DISCOUNT20") {
-      setDiscountAmount(0.2); // 20% discount
-      setDiscountCode(code);
-    } else {
-      setDiscountAmount(0);
-      setDiscountCode("");
-      alert("Invalid discount code!");
-    }
+    const discount = DISCOUNT_CODES[code.toUpperCase()] || 0;
+    setDiscountAmount(discount);
+    setDiscountCode(discount ? code : "");
+
+    if (!discount) console.warn("Invalid discound code");
   };
 
   const addToCart = (item: CartItem) => {

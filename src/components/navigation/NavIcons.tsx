@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -42,18 +42,19 @@ const NavIcons = () => {
   }, []);
 
   // Fungsi untuk membuka profile dropdown atau menuju ke login jika belum login
-  const handleProfile = () => {
+  const handleProfile = useCallback(() => {
     if (!isLoggedIn) {
       router.push("/login"); // Arahkan ke halaman login
+      return;
     }
     setIsProfileOpen((prev) => !prev);
-  };
+  }, [isLoggedIn, router]);
 
   // Fungsi untuk logout (opsional)
-  const handleLogout = () => {
-    logout(); // Set status login menjadi false
+  const handleLogout = useCallback(async () => {
+    await logout(); // Set status login menjadi false
     router.push("/login"); // Arahkan ke halaman login setelah logout
-  };
+  }, [logout, router]);
 
   return (
     <div className="flex items-center gap-4 xl:gap-6 relative">
