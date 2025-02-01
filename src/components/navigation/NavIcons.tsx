@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,33 @@ const NavIcons = () => {
   const { cartCount } = useCart();
   const { isLoggedIn, user, logout } = useUser();
   const router = useRouter();
+
+  const cartModelRef = useRef<HTMLDivElement>(null);
+  const profileModelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutSide = (event: MouseEvent) => {
+      if (
+        cartModelRef.current &&
+        !cartModelRef.current.contains(event.target as Node)
+      ) {
+        setIsCartOpen(false);
+      }
+
+      if (
+        profileModelRef.current &&
+        !profileModelRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutSide);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutSide);
+    };
+  }, []);
 
   // Fungsi untuk membuka profile dropdown atau menuju ke login jika belum login
   const handleProfile = () => {
@@ -59,7 +86,10 @@ const NavIcons = () => {
       </button>
 
       {isProfileOpen ? (
-        <div className="absolute pt-6 pb-4 px-7 rounded-lg bg-white top-12 left-0 text-sm shadow-lg z-30 max-w-[300px]">
+        <div
+          ref={profileModelRef}
+          className="absolute pt-6 pb-4 px-7 rounded-lg bg-white top-12 -left-24 text-sm shadow-lg z-30 max-w-[300px]"
+        >
           <button
             onClick={() => setIsProfileOpen(false)}
             className="absolute top-[1px] right-2 text-xl text-gray-600 hover:text-gray-800 transition duration-200"
@@ -141,7 +171,11 @@ const NavIcons = () => {
         )}
       </div>
 
-      {isCartOpen && <CartModal closeModal={() => setIsCartOpen(false)} />}
+      {isCartOpen && (
+        <div ref={cartModelRef} className="absolute top-0 right-0">
+          <CartModal closeModal={() => setIsCartOpen(false)} />
+        </div>
+      )}
     </div>
   );
 };
