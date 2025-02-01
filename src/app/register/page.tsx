@@ -1,25 +1,24 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation"; // Untuk navigasi setelah registrasi berhasil
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useUser } from "@/context/AuthContext";
 
 const Register = () => {
   const router = useRouter();
+  const { login } = useUser();
 
-  // State untuk menyimpan nama, email, password, error, dan loading
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Fungsi untuk menangani registrasi
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    // Validasi input
     if (!name || !email || !password) {
       setError("Semua kolom harus diisi.");
       setLoading(false);
@@ -27,7 +26,6 @@ const Register = () => {
     }
 
     try {
-      // Menambahkan user baru ke API
       const response = await fetch("https://api.escuelajs.co/api/v1/users", {
         method: "POST",
         headers: {
@@ -37,8 +35,8 @@ const Register = () => {
           name,
           email,
           password,
-          role: "customer", // Secara default role customer, bisa dikustomisasi
-          avatar: "https://i.imgur.com/LDOO4Qs.jpg", // Avatar default
+          role: "customer",
+          avatar: "https://i.imgur.com/LDOO4Qs.jpg",
         }),
       });
 
@@ -48,10 +46,19 @@ const Register = () => {
         throw new Error(data.message || "Gagal registrasi.");
       }
 
-      // Jika registrasi berhasil, arahkan ke halaman login
-      router.push("/login");
+      // Simpan data user ke state dan arahkan ke halaman utama
+      const userAuth = {
+        id: data.id,
+        email: data.email,
+        name: data.name,
+        role: data.role,
+        avatar: data.avatar,
+      };
+
+      login(userAuth); // Simpan sesi pengguna
+      router.push("/"); // Redirect ke halaman utama
     } catch (error) {
-      setError("error" + error);
+      setError("Terjadi kesalahan: " + error);
     } finally {
       setLoading(false);
     }
@@ -64,7 +71,6 @@ const Register = () => {
         {error && <p className="text-red-600 mb-4">{error}</p>}
 
         <form onSubmit={handleRegister} className="flex flex-col gap-4">
-          {/* Input Nama */}
           <label htmlFor="name" className="text-sm font-medium">
             Nama
           </label>
@@ -78,7 +84,6 @@ const Register = () => {
             required
           />
 
-          {/* Input Email */}
           <label htmlFor="email" className="text-sm font-medium">
             Email
           </label>
@@ -92,7 +97,6 @@ const Register = () => {
             required
           />
 
-          {/* Input Password */}
           <label htmlFor="password" className="text-sm font-medium">
             Password
           </label>
@@ -106,7 +110,6 @@ const Register = () => {
             required
           />
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-600"
