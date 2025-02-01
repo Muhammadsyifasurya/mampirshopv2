@@ -34,10 +34,15 @@ const CheckoutPage = () => {
   );
   const { user } = useUser();
   const [isPaymentCompleted, setIsPaymentCompleted] = useState(false);
+  const [invoiceId, setInvoiceId] = useState<string | null>(null);
 
   useEffect(() => {
     if (cartItems.length > 0) {
       const total = calculateTotal();
+
+      const generatedInvoiceId = `INV${Date.now()}`;
+      setInvoiceId(generatedInvoiceId);
+
       setInvoiceDetails({
         items: cartItems,
         totalAmount: total,
@@ -50,8 +55,12 @@ const CheckoutPage = () => {
   }, [cartItems, calculateTotal]);
 
   const handlePayment = () => {
+    if (!invoiceId) {
+      console.error("Invoice ID is missing!");
+      return;
+    }
     const newOrder = {
-      id: `INV${Date.now()}`, // unique ID
+      id: invoiceId, // unique ID
       items: cartItems,
       totalAmount: calculateTotal(),
       date: new Date().toISOString(),
@@ -119,7 +128,7 @@ const CheckoutPage = () => {
                 Date: {new Date().toLocaleDateString()}
               </div>
               <div className="text-sm">
-                Invoice #: INV{Math.floor(Math.random() * 100000)}
+                Invoice #: {invoiceId || "loading..."}
               </div>
             </div>
           </div>
