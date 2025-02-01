@@ -10,6 +10,18 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "elitefitness.com.mx",
+      },
+      {
+        protocol: "https",
+        hostname: "hatrabbits.com",
+      },
+      {
+        protocol: "https",
         hostname: "www.google.com",
       },
       {
