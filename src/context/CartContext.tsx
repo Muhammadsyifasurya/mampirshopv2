@@ -138,7 +138,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     const result =
       input.match(regex)?.[1] ||
       "https://down-id.img.susercontent.com/file/4d172e17968ca4535120c09e1c0df06c";
-    console.log(result);
     return result;
   };
 
