@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: "Mampir Shop",
   description:
     "Mampir Shop - Discover high-quality products at the best prices. Enjoy a seamless and convenient shopping experience with us!",
-  icons: "/cart.svg",
+  icons: "/mampirshop.png",
 };
 
 export default function RootLayout({
