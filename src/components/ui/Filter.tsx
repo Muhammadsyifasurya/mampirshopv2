@@ -14,10 +14,17 @@ const Filter = () => {
     fetchCategories,
     categories,
     searchQuery,
+    setSortOrder,
+    sortOrder,
   } = useCart();
 
   const handleCategoryChange = (categoryId: number | null) => {
     setSelectedCategoryFilter(categoryId); // Update context with selected category filter
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOrder(e.target.value);
+    console.log(sortOrder);
   };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,13 +85,15 @@ const Filter = () => {
       </div>
       <div className="">
         <select
-          title="oke"
-          id=""
+          title="sort by"
+          id="sorted"
+          value={sortOrder}
+          onChange={handleSortChange}
           className="py-2 px-4 rounded-2xl text-xs font-medium bg-white ring-1 ring-gray-400"
         >
-          <option>Sort By</option>
-          <option value="">Price (low to hight)</option>
-          <option value="">Price (hight to low)</option>
+          <option value="">Sort By</option>
+          <option value="asc">Price (low to hight)</option>
+          <option value="dsc">Price (hight to low)</option>
         </select>
       </div>
     </div>
