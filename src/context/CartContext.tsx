@@ -61,6 +61,8 @@ interface CartContextProps {
   fetchCategories: () => void;
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  loading: boolean;
+  setProductsFilter: React.Dispatch<React.SetStateAction<Product[]>>;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -80,6 +82,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   >(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const getUserId = (): string | null => {
     const storedUser = Cookies.get("user"); // Get user data from cookies
@@ -103,6 +106,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
   const fetchFilteredProducts = async () => {
     try {
+      setLoading(true);
+
       const response = await axios.get(
         "https://api.escuelajs.co/api/v1/products",
         {
@@ -117,6 +122,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
       setProductsFilter(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -208,6 +215,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <CartContext.Provider
       value={{
+        setProductsFilter,
+        loading,
         searchQuery, // Tambahkan searchQuery
         setSearchQuery, // Tambahkan setSearchQuery
         fetchCategories,
