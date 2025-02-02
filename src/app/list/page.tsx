@@ -11,7 +11,7 @@ import Image from "next/image";
 import { Product, ProductData } from "@/interfaces/Props";
 
 const ListPage: React.FC = () => {
-  const { addToCart, productsFilter, loading, setProductsFilter } = useCart();
+  const { addToCart, sortedProducts, loading, setProductsFilter } = useCart();
   const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -229,8 +229,8 @@ const ListPage: React.FC = () => {
         </>
       ) : (
         <div className="flex flex-wrap gap-x-[4%] gap-y-10 mt-12 justify-start">
-          {productsFilter.length > 0 ? (
-            productsFilter.map((product) => (
+          {sortedProducts.length > 0 ? (
+            sortedProducts.map((product) => (
               <ProductList
                 key={product.id}
                 {...product}
