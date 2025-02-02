@@ -21,6 +21,13 @@ const NewProducts = ({ products }: { products: Product[] }) => {
     images: [],
   });
 
+  const sortedProducts = productList
+    .sort(
+      (a, b) =>
+        new Date(b.creationAt).getTime() - new Date(a.creationAt).getTime()
+    )
+    .slice(0, 4);
+
   const handleShowPopup = () => {
     setShowPopup(true);
     setTimeout(() => setShowPopup(false), 3000);
@@ -172,7 +179,7 @@ const NewProducts = ({ products }: { products: Product[] }) => {
 
       {/* Product List */}
       <div className="flex flex-wrap gap-10 mt-12 justify-between">
-        {productList.map((product) => (
+        {sortedProducts.map((product) => (
           <ProductList
             id={product.id}
             key={product.id}
