@@ -2,14 +2,19 @@
 import React from "react";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
 
 const Searchbar = () => {
   const { setSearchQuery } = useCart();
+  const router = useRouter();
+
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name") as string;
     setSearchQuery(name);
+
+    router.push(`/category?search=${encodeURIComponent(name)}`);
   };
 
   return (

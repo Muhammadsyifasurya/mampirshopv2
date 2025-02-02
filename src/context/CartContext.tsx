@@ -234,8 +234,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         setSortOrder,
         setProductsFilter,
         loading,
-        searchQuery, // Tambahkan searchQuery
-        setSearchQuery, // Tambahkan setSearchQuery
+        searchQuery,
+        setSearchQuery,
         fetchCategories,
         categories,
         selectedCategoryFilter,
@@ -257,7 +257,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         increaseQuantity,
         decreaseQuantity,
         calculateTotal,
-        setCartItems, // Menambahkan setCartItems ke value
+        setCartItems,
         applyDiscount,
         addOrder,
         cartCount,

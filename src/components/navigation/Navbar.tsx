@@ -43,7 +43,7 @@ const Navbar = () => {
                 Homepage
               </Link>
               <Link
-                href="/list"
+                href="/category"
                 className="relative after:content-[''] after:block after:w-0 after:h-0.5 after:bg-[#A0AEC0] after:transition-all after:duration-300 hover:after:w-full"
               >
                 Category
