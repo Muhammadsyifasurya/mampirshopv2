@@ -1,8 +1,7 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { deleteData, getDataResponse, updateData } from "../service/api";
+import React, { useState } from "react";
+import { deleteData, updateData } from "../service/api";
 import { useCart } from "@/context/CartContext";
 import Popup from "@/components/ui/Popup";
 import ProductList from "@/components/products/ProductList";
@@ -12,8 +11,7 @@ import Image from "next/image";
 import { Product, ProductData } from "@/interfaces/Props";
 
 const ListPage: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { addToCart, productsFilter, loading, setProductsFilter } = useCart();
   const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -25,57 +23,6 @@ const ListPage: React.FC = () => {
     categoryId: null,
     images: [],
   });
-
-  // Fungsi untuk menambah URL gambar
-  const handleAddImage = () => {
-    setFormData((prev) => ({
-      ...prev,
-      images: [...prev.images, ""],
-    }));
-  };
-
-  // Fungsi untuk mengedit URL gambar tertentu
-  const handleImageChange = (index: number, value: string) => {
-    setFormData((prev) => {
-      const newImages = [...prev.images];
-      newImages[index] = value;
-      return { ...prev, images: newImages };
-    });
-  };
-
-  // Fungsi untuk menghapus URL gambar tertentu
-  const handleRemoveImage = (index: number) => {
-    setFormData((prev) => {
-      const newImages = prev.images.filter((_, i) => i !== index);
-      return { ...prev, images: newImages };
-    });
-  };
-
-  const searchParams = useSearchParams();
-  const { addToCart, productsFilter } = useCart();
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const nameQuery = searchParams.get("name") || "";
-
-        const endpoint = `/products/?title=${nameQuery}`;
-        const data = await getDataResponse(endpoint);
-        setProducts(data);
-      } catch (error) {
-        setError(
-          "Error fetching products: " +
-            (error instanceof Error ? error.message : "Unknown error")
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, [searchParams]);
 
   const handleShowPopup = () => {
     setShowPopup(true);
@@ -95,7 +42,7 @@ const ListPage: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      setProducts((prevList) =>
+      setProductsFilter((prevList) =>
         prevList.filter((product) => product.id !== id)
       );
       await deleteData(`/products/${id}`);
@@ -123,6 +70,31 @@ const ListPage: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Fungsi untuk menambah URL gambar
+  const handleAddImage = () => {
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ""],
+    }));
+  };
+
+  // Fungsi untuk mengedit URL gambar tertentu
+  const handleImageChange = (index: number, value: string) => {
+    setFormData((prev) => {
+      const newImages = [...prev.images];
+      newImages[index] = value;
+      return { ...prev, images: newImages };
+    });
+  };
+
+  // Fungsi untuk menghapus URL gambar tertentu
+  const handleRemoveImage = (index: number) => {
+    setFormData((prev) => {
+      const newImages = prev.images.filter((_, i) => i !== index);
+      return { ...prev, images: newImages };
+    });
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProduct) return;
@@ -137,7 +109,7 @@ const ListPage: React.FC = () => {
 
     try {
       await updateData(`/products/${editingProduct.id}`, updatedProduct);
-      setProducts((prevList) =>
+      setProductsFilter((prevList) =>
         prevList.map((product) =>
           product.id === editingProduct.id
             ? { ...product, ...updatedProduct }
@@ -275,10 +247,4 @@ const ListPage: React.FC = () => {
   );
 };
 
-export default function Page() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ListPage />
-    </Suspense>
-  );
-}
+export default ListPage;
