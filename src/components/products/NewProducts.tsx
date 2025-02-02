@@ -21,7 +21,7 @@ const NewProducts = ({ products }: { products: Product[] }) => {
     images: [],
   });
 
-  const sortedProducts = productList
+  const newProducts = productList
     .sort(
       (a, b) =>
         new Date(b.creationAt).getTime() - new Date(a.creationAt).getTime()
@@ -179,7 +179,7 @@ const NewProducts = ({ products }: { products: Product[] }) => {
 
       {/* Product List */}
       <div className="flex flex-wrap gap-10 mt-12 justify-between">
-        {sortedProducts.map((product) => (
+        {newProducts.map((product) => (
           <ProductList
             id={product.id}
             key={product.id}
