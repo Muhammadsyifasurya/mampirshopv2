@@ -63,6 +63,9 @@ interface CartContextProps {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
   loading: boolean;
   setProductsFilter: React.Dispatch<React.SetStateAction<Product[]>>;
+  setSortOrder: React.Dispatch<React.SetStateAction<string>>;
+  sortedProducts: Product[];
+  sortOrder: string;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -83,6 +86,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [sortOrder, setSortOrder] = useState<string>("");
 
   const getUserId = (): string | null => {
     const storedUser = Cookies.get("user"); // Get user data from cookies
@@ -91,6 +95,16 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     const parsedUser = JSON.parse(storedUser);
     return parsedUser.id || null;
   };
+
+  const sortedProducts = sortOrder
+    ? productsFilter.sort((a, b) => {
+        if (sortOrder === "asc") {
+          return a.price - b.price; // Urutan harga dari rendah ke tinggi
+        } else {
+          return b.price - a.price; // Urutan harga dari tinggi ke rendah
+        }
+      })
+    : productsFilter;
 
   // Fetch categories from API
   const fetchCategories = async () => {
@@ -215,6 +229,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <CartContext.Provider
       value={{
+        sortOrder,
+        sortedProducts,
+        setSortOrder,
         setProductsFilter,
         loading,
         searchQuery, // Tambahkan searchQuery
