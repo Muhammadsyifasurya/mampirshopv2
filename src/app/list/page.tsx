@@ -118,6 +118,7 @@ const ListPage: React.FC = () => {
       );
     } catch (error) {
       console.error("Error updating product:", error);
+      setError("Error");
     }
 
     setIsEditing(false);
