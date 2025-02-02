@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 
 const Searchbar = () => {
-  const { setSearchQuery, fetchFilteredProducts, searchQuery } = useCart();
+  const { setSearchQuery } = useCart();
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
