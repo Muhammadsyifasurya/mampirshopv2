@@ -52,7 +52,7 @@ const ListPage: React.FC = () => {
   };
 
   const searchParams = useSearchParams();
-  const { addToCart } = useCart();
+  const { addToCart, productsFilter } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -60,13 +60,8 @@ const ListPage: React.FC = () => {
         setLoading(true);
         setError(null);
         const nameQuery = searchParams.get("name") || "";
-        const categoryId = searchParams.get("categoryId");
-        const minPrice = Number(searchParams.get("minPrice")) || 0;
-        const maxPrice = Number(searchParams.get("maxPrice")) || 10000;
 
-        const endpoint = `/products/?title=${nameQuery}${
-          categoryId ? `&categoryId=${categoryId}` : ""
-        }&price_min=${minPrice}&price_max=${maxPrice}`;
+        const endpoint = `/products/?title=${nameQuery}`;
         const data = await getDataResponse(endpoint);
         setProducts(data);
       } catch (error) {
@@ -261,8 +256,8 @@ const ListPage: React.FC = () => {
         </>
       ) : (
         <div className="flex flex-wrap gap-x-[4%] gap-y-10 mt-12 justify-start">
-          {products.length > 0 ? (
-            products.map((product) => (
+          {productsFilter.length > 0 ? (
+            productsFilter.map((product) => (
               <ProductList
                 key={product.id}
                 {...product}

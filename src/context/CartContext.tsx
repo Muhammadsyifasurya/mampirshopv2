@@ -7,6 +7,8 @@ import React, {
   useEffect,
 } from "react";
 import Cookies from "js-cookie"; // Import js-cookie
+import { Product } from "@/interfaces/Props";
+import axios from "axios";
 
 interface CartItem {
   id: number;
@@ -22,6 +24,11 @@ interface Order {
   totalAmount: number;
   date: string;
   status: string; // Pending, Completed, etc.
+}
+
+interface Category {
+  id: number;
+  name: string;
 }
 
 interface CartContextProps {
@@ -40,6 +47,20 @@ interface CartContextProps {
   applyDiscount: (code: string) => void;
   addOrder: (order: Order) => void;
   cartCount: number;
+  productsFilter: Product[];
+  fetchFilteredProducts: () => void;
+  minPrice: number;
+  maxPrice: number;
+  setMinPrice: (price: number) => void;
+  setMaxPrice: (price: number) => void;
+  selectedCategoryFilter: number | null;
+  setSelectedCategoryFilter: React.Dispatch<
+    React.SetStateAction<number | null>
+  >;
+  categories: Category[];
+  fetchCategories: () => void;
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -51,6 +72,14 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   const [orderHistory, setOrderHistory] = useState<Order[]>([]);
   const [discountCode, setDiscountCode] = useState<string>("");
   const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [maxPrice, setMaxPrice] = useState<number>(1000); // Default max price
+  const [productsFilter, setProductsFilter] = useState<Product[]>([]);
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<
+    number | null
+  >(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const getUserId = (): string | null => {
     const storedUser = Cookies.get("user"); // Get user data from cookies
@@ -59,6 +88,41 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     const parsedUser = JSON.parse(storedUser);
     return parsedUser.id || null;
   };
+
+  // Fetch categories from API
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get<Category[]>(
+        "https://api.escuelajs.co/api/v1/categories"
+      );
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Failed to fetch categories", error);
+    }
+  };
+
+  const fetchFilteredProducts = async () => {
+    try {
+      const response = await axios.get(
+        "https://api.escuelajs.co/api/v1/products",
+        {
+          params: {
+            price_min: minPrice,
+            price_max: maxPrice,
+            categoryId: selectedCategoryFilter,
+            title: searchQuery,
+          },
+        }
+      );
+      setProductsFilter(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFilteredProducts();
+  }, [minPrice, maxPrice, selectedCategoryFilter]);
 
   // Simpan data keranjang ke localStorage saat ada perubahan
   useEffect(() => {
@@ -144,6 +208,18 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <CartContext.Provider
       value={{
+        searchQuery, // Tambahkan searchQuery
+        setSearchQuery, // Tambahkan setSearchQuery
+        fetchCategories,
+        categories,
+        selectedCategoryFilter,
+        setSelectedCategoryFilter,
+        minPrice,
+        maxPrice,
+        setMaxPrice,
+        setMinPrice,
+        productsFilter,
+        fetchFilteredProducts,
         setOrderHistory,
         handleImage,
         cartItems,

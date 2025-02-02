@@ -1,110 +1,73 @@
 "use client";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter untuk update URL query parameter
-
-interface Category {
-  id: number;
-  name: string;
-}
+import { useCart } from "@/context/CartContext";
 
 const Filter = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [minPrice, setMinPrice] = useState<number>();
-  const [maxPrice, setMaxPrice] = useState<number>();
   const router = useRouter(); // Inisialisasi router untuk mengubah URL
-
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get<Category[]>(
-        "https://api.escuelajs.co/api/v1/categories"
-      );
-      setCategories(response.data);
-    } catch (err) {
-      setError("Failed to fetch categories" + error);
-      console.log(err);
-    }
-  };
+  const {
+    minPrice,
+    maxPrice,
+    setMinPrice,
+    setMaxPrice,
+    fetchFilteredProducts,
+    setSelectedCategoryFilter,
+    selectedCategoryFilter,
+    fetchCategories,
+    categories,
+    searchQuery,
+  } = useCart();
 
   const handleCategoryChange = (categoryId: number | null) => {
-    setSelectedCategory(categoryId);
-    // Jika kategori dipilih, update URL dengan kategori
-    if (categoryId !== null) {
-      router.push(`/list?page=1&categoryId=${categoryId}`);
-    } else {
-      // Jika tidak ada kategori, tetap update dengan minPrice dan maxPrice saja
-      router.push(`/list?page=1&minPrice=${minPrice}&maxPrice=${maxPrice}`);
-    }
+    setSelectedCategoryFilter(categoryId); // Update context with selected category filter
   };
 
-  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    if (!isNaN(value)) {
-      setMinPrice(value);
-    }
-  };
-
-  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    if (!isNaN(value)) {
-      setMaxPrice(value);
-    }
-  };
-
-  const handleBlur = () => {
-    // Jika salah satu nilai undefined atau kosong, jangan update URL
-    if (!minPrice || !maxPrice) {
-      return; // Tidak melakukan apa-apa
-    }
-
-    // Ambil categoryId saat ini, jika tidak ada kategori, URL hanya mengandung minPrice dan maxPrice
-    if (selectedCategory !== null) {
-      router.push(
-        `/list?page=1&categoryId=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-      );
-    } else {
-      // Jika tidak ada kategori yang dipilih, update hanya dengan minPrice dan maxPrice
-      router.push(`/list?page=1&minPrice=${minPrice}&maxPrice=${maxPrice}`);
+  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    if (name === "minPrice") {
+      setMinPrice(Number(value));
+    } else if (name === "maxPrice") {
+      setMaxPrice(Number(value));
     }
   };
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    fetchFilteredProducts();
+  }, [minPrice, maxPrice, selectedCategoryFilter, searchQuery]);
+
+  useEffect(() => {
+    fetchCategories(); // Fetch categories on initial load
+  }, [fetchCategories]);
 
   return (
     <div className="mt-12 flex justify-between">
       <div className="flex gap-6 flex-wrap">
         <div className="flex gap-2">
           <input
-            type="text"
-            name="min"
-            placeholder="min price"
+            type="number"
+            name="minPrice"
+            placeholder="Min Price"
             className="text-xs rounded-2xl text-center w-24 ring-1 ring-gray-400"
             value={minPrice}
-            onChange={handleMinPriceChange}
-            onBlur={handleBlur}
+            onChange={handleFilterChange}
           />
           <div className="flex items-center">
             <p className="border-b-2 w-3 border-[#848383]" />
           </div>
           <input
-            type="text"
-            name="max"
-            placeholder="max price"
+            type="number"
+            name="maxPrice"
+            placeholder="Max Price"
             className="text-xs rounded-2xl text-center w-24 ring-1 ring-gray-400"
             value={maxPrice}
-            onChange={handleMaxPriceChange}
-            onBlur={handleBlur}
+            onChange={handleFilterChange}
           />
         </div>
         <select
-          title="oke"
+          title="categories"
           name="type"
           className="py-2 px-4 rounded-2xl text-xs font-medium bg-gray-200"
-          value={selectedCategory ?? ""}
+          value={selectedCategoryFilter ?? ""}
           onChange={(e) => handleCategoryChange(Number(e.target.value))}
         >
           <option value="">All Category</option>

@@ -1,18 +1,15 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useCart } from "@/context/CartContext";
 
 const Searchbar = () => {
-  const router = useRouter();
+  const { setSearchQuery, fetchFilteredProducts, searchQuery } = useCart();
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name") as string;
-
-    if (name) {
-      router.push(`/list?name=${name}`);
-    }
+    setSearchQuery(name);
   };
 
   return (
