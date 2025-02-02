@@ -7,9 +7,7 @@ import Slider from "@/components/ui/Slider";
 const Page = async () => {
   const products = await getDataResponse("/products");
   const categories = await getDataResponse("/categories");
-
-  const limitproducts = products.slice(0, 4);
-
+  const newProducts = await getDataResponse("/products");
   return (
     <>
       {/* Slider tetap bisa dipanggil di sini, jika ingin dirender di sisi klien */}
@@ -22,7 +20,7 @@ const Page = async () => {
       <CategorySection categories={categories} />
 
       {/* Panggil NewProducts */}
-      <NewProducts products={limitproducts} />
+      <NewProducts products={newProducts} />
     </>
   );
 };
