@@ -13,4 +13,5 @@ export interface Product {
   price: number;
   description: string;
   categoryId: number | null;
+  creationAt: string;
 }
