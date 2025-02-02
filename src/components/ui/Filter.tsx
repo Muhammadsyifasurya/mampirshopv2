@@ -1,10 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter untuk update URL query parameter
+import React, { useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 
 const Filter = () => {
-  const router = useRouter(); // Inisialisasi router untuk mengubah URL
   const {
     minPrice,
     maxPrice,
