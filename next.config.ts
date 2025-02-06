@@ -14,11 +14,19 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "img.lazcdn.com",
+      },
+      {
+        protocol: "https",
         hostname: "fakestoreapi.com",
       },
       {
         protocol: "https",
         hostname: "www.kapowtoys.es",
+      },
+      {
+        protocol: "https",
+        hostname: "images.vestiairecollective.com",
       },
       {
         protocol: "https",
@@ -28,10 +36,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "i.ebayimg.com",
       },
-      {
-        protocol: "https",
-        hostname: "images.tokopedia.net",
-      },
+
       {
         protocol: "https",
         hostname: "pbs.twimg.com",
@@ -42,7 +47,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "shorturl.at",
+        hostname: "images.vestiairecollective.com",
       },
       {
         protocol: "https",
@@ -58,7 +63,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "occ-0-8407-1723.1.nflxso.net",
+        hostname: "nobero.com",
       },
       {
         protocol: "https",
@@ -113,8 +118,8 @@ const nextConfig: NextConfig = {
         hostname: "api.escuelajs.co",
       },
       {
-        protocol: "http",
-        hostname: "api.escuelajs.co",
+        protocol: "https",
+        hostname: "i5.walmartimages.com",
       },
       {
         protocol: "https",
@@ -122,7 +127,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "png.pngtree.com",
+        hostname: "www.thekooples.com",
       },
       {
         protocol: "https",
@@ -138,7 +143,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "i0.wp.com",
+        hostname: "mir-s3-cdn-cf.behance.net",
       },
       {
         protocol: "https",
@@ -162,7 +167,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "mir-s3-cdn-cf.behance.net",
+        hostname: "images.tokopedia.net",
       },
       {
         protocol: "https",
