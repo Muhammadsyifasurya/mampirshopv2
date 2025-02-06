@@ -21,6 +21,11 @@ ChartJS.register(
   LinearScale
 );
 
+interface Props {
+  id: number;
+  date: string;
+  totalAmount: number;
+}
 const AdminDashboard = () => {
   const [salesData, setSalesData] = useState<{ [key: string]: number }>({});
   const [chartData, setChartData] = useState<{
@@ -59,7 +64,7 @@ const AdminDashboard = () => {
         const orders = JSON.parse(storedOrders);
         console.log(`Orders for ${userKey}:`, orders);
 
-        orders.forEach((order: any) => {
+        orders.forEach((order: Props) => {
           const orderDate = new Date(order.date).toLocaleDateString();
           // Format: YYYY-MM-DD
           console.log(
