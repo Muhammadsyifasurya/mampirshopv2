@@ -23,7 +23,10 @@ ChartJS.register(
 
 const AdminDashboard = () => {
   const [salesData, setSalesData] = useState<{ [key: string]: number }>({});
-  const [chartData, setChartData] = useState<any>(null);
+  const [chartData, setChartData] = useState<{
+    labels: string[];
+    datasets: { label: string; data: number[]; backgroundColor: string[] }[];
+  } | null>(null);
 
   // Ambil total penjualan berdasarkan tanggal saat komponen pertama kali dimuat
   useEffect(() => {
@@ -40,7 +43,7 @@ const AdminDashboard = () => {
 
   // Fungsi untuk mengambil dan mengelompokkan total sales berdasarkan tanggal
   const getTotalSalesByDate = () => {
-    let totalSalesByDate: { [key: string]: number } = {};
+    const totalSalesByDate: { [key: string]: number } = {};
 
     // Ambil data user di cookies
     const allUsers = Object.keys(Cookies.get()).filter((key) =>
@@ -113,11 +116,6 @@ const AdminDashboard = () => {
           label: "Total Penjualan",
           data: data,
           backgroundColor: backgroundColors,
-          hoverBackgroundColor: backgroundColors.map((color) =>
-            color.replace("1", "0.6")
-          ),
-          borderWidth: 1,
-          borderColor: "#fff",
         },
       ],
     });
