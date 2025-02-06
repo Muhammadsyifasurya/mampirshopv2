@@ -66,6 +66,7 @@ interface CartContextProps {
   setSortOrder: React.Dispatch<React.SetStateAction<string>>;
   sortedProducts: Product[];
   sortOrder: string;
+  getTotalSales: () => number;
 }
 
 const CartContext = createContext<CartContextProps | undefined>(undefined);
@@ -116,6 +117,32 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     } catch (error) {
       console.error("Failed to fetch categories", error);
     }
+  };
+
+  // Di dalam CartContext
+
+  const getTotalSales = () => {
+    let totalSales = 0;
+
+    // Ambil data user di cookies
+    const allUsers = Object.keys(Cookies.get()).filter((key) =>
+      key.startsWith("orderHistory_")
+    );
+
+    // Jumlahkan total amount dari orderHistory untuk setiap user
+    allUsers.forEach((userKey) => {
+      const userId = userKey.split("_")[1];
+      const storedOrders = Cookies.get(userKey);
+
+      if (storedOrders) {
+        const orders = JSON.parse(storedOrders);
+        orders.forEach((order: Order) => {
+          totalSales += order.totalAmount;
+        });
+      }
+    });
+
+    return totalSales;
   };
 
   const fetchFilteredProducts = async () => {
@@ -229,6 +256,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <CartContext.Provider
       value={{
+        getTotalSales,
         sortOrder,
         sortedProducts,
         setSortOrder,

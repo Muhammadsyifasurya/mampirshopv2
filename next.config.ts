@@ -91,7 +91,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "imgs.search.brave.com",
+        hostname: "i5.walmartimages.com",
       },
       {
         protocol: "https",
@@ -119,11 +119,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "i5.walmartimages.com",
+        hostname: "i1.sndcdn.com",
       },
       {
         protocol: "https",
-        hostname: "upload.wikimedia.org",
+        hostname: "encrypted-tbn0.gstatic.com",
       },
       {
         protocol: "https",
@@ -139,7 +139,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "encrypted-tbn0.gstatic.com",
+        hostname: "cdn-icons-png.flaticon.com",
       },
       {
         protocol: "https",
