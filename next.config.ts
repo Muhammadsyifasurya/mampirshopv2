@@ -10,11 +10,39 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "alamocitygolftrail.com",
+      },
+      {
+        protocol: "https",
+        hostname: "fakestoreapi.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.kapowtoys.es",
+      },
+      {
+        protocol: "https",
+        hostname: "i.pinimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "i.ebayimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.tokopedia.net",
+      },
+      {
+        protocol: "https",
         hostname: "pbs.twimg.com",
       },
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "shorturl.at",
       },
       {
         protocol: "https",

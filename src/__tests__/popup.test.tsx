@@ -1,39 +1,75 @@
-import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom"; // Untuk matcher tambahan
-import Popup from "../components/ui/Popup"; // Adjust the path based on your file structure
+import "@testing-library/jest-dom";
+import Popup from "@/components/ui/Popup"; // Sesuaikan path ini
 
 describe("Popup Component", () => {
-  test("renders correctly when visible", () => {
-    render(
-      <Popup message="Test Message" isVisible={true} onClose={jest.fn()} />
-    );
+  const mockOnClose = jest.fn();
 
-    // Pastikan elemen popup ditampilkan
-    expect(screen.getByText("Succes!")).toBeInTheDocument();
-    expect(screen.getByText("Test Message")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /✕/i })).toBeInTheDocument();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  test("does not render when not visible", () => {
-    const { container } = render(
-      <Popup message="Test Message" isVisible={false} onClose={jest.fn()} />
+  it("renders correctly when visible and type is 'success'", () => {
+    render(
+      <Popup
+        message="Operation completed successfully."
+        isVisible={true}
+        type="success"
+        onClose={mockOnClose}
+      />
     );
 
-    // Pastikan popup tidak dirender ges
-    expect(container.firstChild).toBeNull();
+    // Check if the popup is displayed
+    expect(screen.getByText("Success!")).toBeInTheDocument();
+    expect(
+      screen.getByText("Operation completed successfully.")
+    ).toBeInTheDocument();
   });
 
-  test("calls onClose when close button is clicked", () => {
-    const mockOnClose = jest.fn();
+  it("renders correctly when visible and type is 'error'", () => {
     render(
-      <Popup message="Test Message" isVisible={true} onClose={mockOnClose} />
+      <Popup
+        message="An error occurred."
+        isVisible={true}
+        type="error"
+        onClose={mockOnClose}
+      />
     );
 
-    const closeButton = screen.getByRole("button", { name: /✕/i });
+    // Check if the popup is displayed
+    expect(screen.getByText("Error!")).toBeInTheDocument();
+    expect(screen.getByText("An error occurred.")).toBeInTheDocument();
+  });
+
+  it("does not render when isVisible is false", () => {
+    render(
+      <Popup
+        message="This message should not appear."
+        isVisible={false}
+        onClose={mockOnClose}
+      />
+    );
+
+    // Check if the popup is not displayed
+    expect(
+      screen.queryByText("This message should not appear.")
+    ).not.toBeInTheDocument();
+  });
+
+  it("calls onClose when the close button is clicked", () => {
+    render(
+      <Popup
+        message="Click the close button."
+        isVisible={true}
+        type="success"
+        onClose={mockOnClose}
+      />
+    );
+
+    // Simulate clicking the close button
+    const closeButton = screen.getByRole("button", { name: "✕" });
     fireEvent.click(closeButton);
 
-    // Pastikan onClose dipanggil
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 });

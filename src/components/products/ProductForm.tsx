@@ -32,10 +32,13 @@ const ProductForm: React.FC<ProductFormProps> = ({
   return (
     <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-96">
       <h3 className="text-xl font-semibold mb-4">Add New Product</h3>
-      <form onSubmit={onSubmit}>
+      <form role="form" onSubmit={onSubmit}>
         <div className="mb-4">
-          <label className="block text-sm mb-2">Title</label>
+          <label className="block text-sm mb-2" htmlFor="title">
+            Title
+          </label>
           <input
+            id="title"
             type="text"
             name="title"
             value={formData.title}
@@ -46,8 +49,12 @@ const ProductForm: React.FC<ProductFormProps> = ({
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm mb-2">Price</label>
+          <label className="block text-sm mb-2" htmlFor="price">
+            Price
+          </label>
           <input
+            id="price"
+            title="Price"
             type="number"
             name="price"
             value={formData.price}
@@ -57,8 +64,11 @@ const ProductForm: React.FC<ProductFormProps> = ({
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm mb-2">Description</label>
+          <label className="block text-sm mb-2" htmlFor="description">
+            Description
+          </label>
           <textarea
+            id="description"
             name="description"
             placeholder="Enter description"
             value={formData.description}
@@ -68,8 +78,11 @@ const ProductForm: React.FC<ProductFormProps> = ({
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm mb-2">Category ID</label>
+          <label className="block text-sm mb-2" htmlFor="categoryId">
+            Category ID
+          </label>
           <input
+            id="categoryId"
             type="number"
             placeholder="Enter category ID"
             name="categoryId"
@@ -81,7 +94,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
         </div>
         {/* Dynamic Image URL Inputs */}
         <div className="mb-4">
-          <label className="block text-sm mb-2">Image URLs (Max : 3)</label>
+          <label className="block text-sm mb-2" htmlFor="image">
+            Image URLs (Max : 3)
+          </label>
           {formData.images.map((image, index) => (
             <div key={index} className="flex items-center mb-2">
               <input
