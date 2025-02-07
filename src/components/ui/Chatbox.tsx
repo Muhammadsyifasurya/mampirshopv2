@@ -165,7 +165,7 @@ const Chatbox = () => {
                   </button>
                 </div>
               )}
-              <div className="flex-1 overflow-y-auto p-4">
+              <div className="flex-1 overflow-y-auto">
                 {messages
                   .filter(
                     (msg) =>
@@ -276,7 +276,7 @@ const Chatbox = () => {
               </button>
             </div>
           )}
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto">
             {messages
               .filter(
                 (msg) =>
