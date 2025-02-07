@@ -6,40 +6,52 @@ import { useRouter } from "next/navigation";
 import CartModal from "../ui/CartModal";
 import { useCart } from "@/context/CartContext";
 import { useUser } from "@/context/AuthContext";
+import Chatbox from "../ui/Chatbox";
 
 const NavIcons = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const { cartCount } = useCart();
   const { isLoggedIn, user, logout } = useUser();
   const router = useRouter();
 
   const cartModelRef = useRef<HTMLDivElement>(null);
   const profileModelRef = useRef<HTMLDivElement>(null);
+  const chatModelRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutSide = (event: MouseEvent) => {
+  // Handle klik di luar modal
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
       if (
+        isCartOpen &&
         cartModelRef.current &&
         !cartModelRef.current.contains(event.target as Node)
       ) {
         setIsCartOpen(false);
       }
-
       if (
+        isProfileOpen &&
         profileModelRef.current &&
         !profileModelRef.current.contains(event.target as Node)
       ) {
         setIsProfileOpen(false);
       }
-    };
+      if (
+        isChatOpen &&
+        chatModelRef.current &&
+        !chatModelRef.current.contains(event.target as Node)
+      ) {
+        setIsChatOpen(false);
+      }
+    },
+    [isCartOpen, isProfileOpen, isChatOpen]
+  );
 
-    document.addEventListener("mousedown", handleClickOutSide);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutSide);
-    };
-  }, []);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [handleClickOutside]);
 
   // Fungsi untuk membuka profile dropdown atau menuju ke login jika belum login
   const handleProfile = useCallback(() => {
@@ -137,7 +149,11 @@ const NavIcons = () => {
       ) : null}
 
       {/* Notification Icon */}
-      <button aria-label="Notifications" className="cursor-pointer">
+      <button
+        aria-label="Notifications"
+        className="cursor-pointer"
+        onClick={() => setIsChatOpen((prev) => !prev)}
+      >
         <Image
           src="/notification.svg"
           alt="Notification Icon"
@@ -149,7 +165,11 @@ const NavIcons = () => {
           }}
         />
       </button>
-
+      {isChatOpen && (
+        <div ref={chatModelRef} className="absolute top-12">
+          <Chatbox />
+        </div>
+      )}
       {/* Cart Icon with Item Count */}
       <div
         className="relative cursor-pointer"

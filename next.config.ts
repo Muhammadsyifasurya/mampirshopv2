@@ -91,7 +91,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "i5.walmartimages.com",
+        hostname: "iili.io",
       },
       {
         protocol: "https",
@@ -195,7 +195,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "t3.ftcdn.net",
+        hostname: "lavanilla.id",
       },
       {
         protocol: "https",
@@ -203,7 +203,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "source.unsplash.com",
+        hostname: "sosialita.id",
       },
     ],
   },
