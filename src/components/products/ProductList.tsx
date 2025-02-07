@@ -53,12 +53,12 @@ const ProductList: React.FC<Product> = ({
       </Link>
       <div className="flex justify-between px-4">
         <span className="font-medium">
-          {title.length > 22 ? `${title.slice(0, 22)}...` : title}
+          {title && title.length > 22 ? `${title.slice(0, 22)}...` : title}
         </span>
         <span className="font-semibold">${price.toLocaleString()}</span>
       </div>
       <div className="text-sm text-gray-500 px-4">
-        {description.length > 100
+        {description && description.length > 100
           ? `${description.slice(0, 100)}...`
           : description}
       </div>
