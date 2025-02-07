@@ -87,6 +87,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState<string>("");
+  const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
+  const [sortedProducts, setSortedProducts] = useState<Product[]>([]);
 
   const getUserId = (): string | null => {
     const storedUser = Cookies.get("user"); // Get user data from cookies
@@ -95,16 +97,6 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     const parsedUser = JSON.parse(storedUser);
     return parsedUser.id || null;
   };
-
-  const sortedProducts = sortOrder
-    ? productsFilter.sort((a, b) => {
-        if (sortOrder === "asc") {
-          return a.price - b.price; // Urutan harga dari rendah ke tinggi
-        } else {
-          return b.price - a.price; // Urutan harga dari tinggi ke rendah
-        }
-      })
-    : productsFilter;
 
   // Fetch categories from API
   const fetchCategories = async () => {
@@ -136,6 +128,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
         }
       );
       setProductsFilter(response.data);
+      setOriginalProducts(response.data);
+      setSortedProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -227,6 +221,22 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
       "https://down-id.img.susercontent.com/file/4d172e17968ca4535120c09e1c0df06c";
     return result;
   };
+
+  // Mengatur urutan produk berdasarkan sortOrder
+  useEffect(() => {
+    if (sortOrder === "") {
+      setSortedProducts(originalProducts); // Jika sortOrder kosong, kembalikan ke urutan awal
+    } else {
+      const sorted = [...originalProducts].sort((a, b) => {
+        if (sortOrder === "asc") {
+          return a.price - b.price; // Urutan harga dari rendah ke tinggi
+        } else {
+          return b.price - a.price; // Urutan harga dari tinggi ke rendah
+        }
+      });
+      setSortedProducts(sorted); // Terapkan urutan yang baru
+    }
+  }, [sortOrder, originalProducts]);
 
   return (
     <CartContext.Provider

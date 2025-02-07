@@ -23,9 +23,10 @@ const Filter = () => {
     setSelectedCategoryFilter(categoryId); // Update context with selected category filter
   };
 
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortOrder(e.target.value);
-    console.log(sortOrder);
+  const handleSortChange = (newSortOrder: string) => {
+    setSortOrder((prevSortOrder) =>
+      prevSortOrder === newSortOrder ? "" : newSortOrder
+    ); // Reset to default if the same value is selected
   };
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +141,7 @@ const Filter = () => {
           title="sort by"
           id="sorted"
           value={sortOrder}
-          onChange={handleSortChange}
+          onChange={(e) => handleSortChange(e.target.value)}
           className="py-2 px-4 rounded-2xl text-xs font-medium bg-white ring-1 ring-gray-400 appearance-none cursor-pointer"
         >
           <option value="">Sort By</option>
