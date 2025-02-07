@@ -120,18 +120,22 @@ const Chatbox = () => {
 
           {selectedUser && (
             <div className="h-full flex flex-col">
-              <div className="flex justify-between items-center mb-2">
-                <button
-                  onClick={() => setSelectedUser(null)}
-                  className="text-xs text-blue-500 font-bold hover:text-[#202C33] transition-all ease-in-out duration-300"
-                >
-                  &lt; Kembali
-                </button>
-              </div>
               {/* Header Chat */}
               {recipient && (
-                <div className="flex items-center gap-3 px-6 justify-between bg-[#202C33] h-14 rounded-t-lg">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 px-3 justify-between bg-[#202C33] h-14 rounded-t-lg">
+                  <div className="flex items-center gap-2">
+                    <button
+                      title="back"
+                      onClick={() => setSelectedUser(null)}
+                      className="text-xl text-white font-bold hover:text-[#46b5f5] transition-all ease-in-out duration-300"
+                    >
+                      <Image
+                        src="/back.svg"
+                        alt="icon back"
+                        width={20}
+                        height={20}
+                      />
+                    </button>
                     {recipient.avatar ? (
                       <div className="rounded-full border-[1px] border-white overflow-hidden">
                         <Image
